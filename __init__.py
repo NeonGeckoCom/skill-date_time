@@ -44,6 +44,7 @@ import re
 import time
 
 from astral import Astral
+from mycroft.skills import skill_api_method
 from pytz import timezone
 from neon_utils.location_utils import *
 from adapt.intent import IntentBuilder
@@ -52,7 +53,6 @@ from neon_utils.skills.neon_skill import NeonSkill, LOG
 import mycroft.audio
 from mycroft.skills.core import intent_handler
 from mycroft.util.format import nice_time, date_time_format
-from mycroft.skills import skill_api_method
 
 
 class TimeSkill(NeonSkill):
@@ -92,7 +92,7 @@ class TimeSkill(NeonSkill):
             LOG.error(e)
             return None
 
-    def get_local_datetime(self, location, message):
+    def get_local_datetime(self, location, message) -> datetime:
         now_utc = datetime.now(timezone('UTC'))
         pref_location = self.preference_location(message)
         try:
@@ -279,7 +279,7 @@ class TimeSkill(NeonSkill):
         if self.gui_enabled:
             self.show_time_gui(location,
                                self.get_display_current_time(location),
-                               self.get_display_date(location), message)
+                               self.get_display_date(location=location), message)
 
     def show_time_gui(self, location, display_time, display_date, message):
         """ Display time on the Mycroft GUI. """
