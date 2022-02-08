@@ -103,193 +103,6 @@ class TimeSkill(NeonSkill):
         # self.gui['build_date'] = None
         self.gui.show_page('idle.qml')
 
-    @staticmethod
-    def _get_timezone_from_neon_utils(locale: Union[dict, str]) -> \
-            Optional[tzinfo]:
-        """
-        Lookup timezone using neon_utils
-        :param locale: str location name or dict of city, state, country
-        :returns: datetime.tzinfo object for the specified locale or None
-        """
-        if not locale:
-            raise ValueError("Locale not specified")
-        coords = get_coordinates(locale)
-        if coords == (-1, -1):
-            return None
-        else:
-            tz_name, _ = get_timezone(*coords)
-            return pytz.timezone(tz_name)
-
-    @staticmethod
-    def _get_timezone_from_builtins(locale: str) -> \
-            Optional[tzinfo]:
-        """
-        Lookup timezone using geocoder and TimezoneFinder
-        :param locale: str location name to lookup
-        :returns: datetime.tzinfo object for the specified locale or None
-        """
-        if not isinstance(locale, str):
-            raise ValueError(f"Invalid locale specified: {locale}")
-        if "/" not in locale:
-            try:
-                # This handles common city names, like "Dallas" or "Paris"
-                # first get the lat / long.
-                g = geocoder.osm(locale)
-                # now look it up
-                tf = TimezoneFinder()
-                timezone = tf.timezone_at(lng=g.lng, lat=g.lat)
-                return pytz.timezone(timezone)
-            except ValueError:
-                # Raised by osm and TimezoneFinder for invalid locale or coords
-                pass
-            except Exception as e:
-                LOG.error(e)
-
-        try:
-            # This handles codes like "America/Los_Angeles"
-            return pytz.timezone(locale)
-        except pytz.UnknownTimeZoneError:
-            pass
-        except Exception as e:
-            LOG.error(e)
-        return None
-
-    def _get_timezone_from_table(self, locale: str) -> \
-            Optional[tzinfo]:
-        """
-        Lookup timezone using skill resource files
-        :param locale: str location name to lookup
-        :returns: datetime.tzinfo object for the specified locale or None
-        """
-        if not isinstance(locale, str):
-            raise ValueError(f"Invalid locale specified: {locale}")
-        timezones = self.translate_namedvalues("timezone.value")
-        for tz in timezones:
-            if locale.lower() == tz.lower():
-                # assumes translation is correct
-                return pytz.timezone(timezones[tz].strip())
-        return None
-
-    def _get_timezone_from_fuzzymatch(self, locale: str) -> \
-            Optional[tzinfo]:
-        """
-        Fuzzymatch a location against the pytz timezones.
-        The pytz timezones consists of Location/Name pairs.  For example:
-            ["Africa/Abidjan", "Africa/Accra", ... "America/Denver", ...
-             "America/New_York", ..., "America/North_Dakota/Center", ...
-             "Cuba", ..., "EST", ..., "Egypt", ..., "Etc/GMT+3", ...
-             "Etc/Zulu", ... "US/Eastern", ... "UTC", ..., "Zulu"]
-        :param locale: str location name to lookup
-        :returns: datetime.tzinfo object for the specified locale or None
-        """
-        if not isinstance(locale, str):
-            raise ValueError(f"Invalid locale specified: {locale}")
-        target = locale.lower()
-        best = None
-        pct = 0
-        for name in pytz.all_timezones:
-            # Separate at '/'
-            normalized = name.lower().replace("_", " ").split("/")
-            if len(normalized) == 1:
-                pct = fuzzy_match(normalized[0], target)
-            elif len(normalized) >= 2:
-                # Check for locations like "Sydney"
-                pct1 = fuzzy_match(normalized[1], target)
-                # locations like "Sydney Australia" or "Center North Dakota"
-                pct2 = fuzzy_match(normalized[-2] + " " + normalized[-1],
-                                   target)
-                pct3 = fuzzy_match(normalized[-1] + " " + normalized[-2],
-                                   target)
-                pct = max(pct1, pct2, pct3)
-            if not best or pct >= best[0]:
-                best = (pct, name)
-        if best and best[0] > 0.8:
-            # solid choice
-            return pytz.timezone(best[1])
-        elif best and best[0] > 0.3:
-            say = speakable_timezone(best[1])
-            if self.ask_yesno("did.you.mean.timezone",
-                              data={"zone_name": say}) == "yes":
-                return pytz.timezone(best[1])
-        else:
-            return None
-
-    def get_timezone(self, locale: Union[str, dict]) \
-            -> Optional[tzinfo]:
-        """
-        Use a variety of approaches to determine the intended timezone.
-        :param locale: string or dict location to lookup
-        :returns: datetime.tzinfo for the specified locale or default locale
-        """
-        LOG.info(f"Getting tz for locale: {locale}")
-        str_locale = locale if isinstance(locale, str) else locale.get("city")
-        for method in (self._get_timezone_from_neon_utils,
-                       self._get_timezone_from_builtins,
-                       self._get_timezone_from_table,
-                       self._get_timezone_from_fuzzymatch):
-            try:
-                if method == self._get_timezone_from_neon_utils:
-                    tz = method(locale)
-                else:
-                    tz = method(str_locale)
-            except ValueError:
-                tz = None
-            if tz:
-                break
-        return tz
-
-    def get_local_datetime(self, location: Optional[str] = None,
-                           message: Optional[Message] = None) -> \
-            Optional[datetime]:
-        """
-        Get the datetime at the requested location or configured location
-        :param location: Optional string location to look up
-        :param message: Message associated with the request
-        :returns: current datetime object or None if tz not found
-        """
-        if location:  # Lookup the tz for the requested location
-            # Filter out invalid characters from location names
-            location = re.sub('[?!./_-]', ' ', location)
-            tz = self.get_timezone(location)
-        else:  # Get the local tz
-            pref_location = self.preference_location(message)
-            location = f'{pref_location["city"]}, {pref_location["state"]}'
-            try:
-                tz = pytz.timezone(pref_location['tz'])
-            except pytz.UnknownTimeZoneError:
-                tz = None
-            if not tz:  # Config tz invalid, try location lookup
-                LOG.warning("configured timezone invalid or undefined")
-                tz = self.get_timezone({"city": pref_location["city"],
-                                        "state": pref_location["state"],
-                                        "country": pref_location["country"]})
-        if not tz:
-            if location and isinstance(location, str):
-                self.speak_dialog("time.tz.not.found", {"location": location})
-            return None
-
-        now_utc = datetime.now(pytz.timezone('UTC'))
-        return now_utc.astimezone(tz)
-
-    def get_spoken_time(self, location: Optional[str] = None,
-                        message: Optional[Message] = None) -> Optional[str]:
-        """
-        Get a speakable time string for the given location and request params
-        :param location: optional str requested location
-        :param message: optional message associated with request
-        :returns: current time formatted per user preferences if location is
-            valid, else None
-        """
-        # Get a formatted spoken time based on the user preferences
-        dt = self.get_local_datetime(location, message)
-        if not dt:
-            return
-        use_ampm = self.preference_skill(message)['use_ampm']
-        if location:
-            use_ampm = True
-        return nice_time(dt, self.lang, speech=True,
-                         use_24hour=self.use_24hour, use_ampm=use_ampm)
-
     @skill_api_method
     def get_display_date(self, day: Optional[datetime] = None,
                          location: Optional[str] = None) -> str:
@@ -468,6 +281,86 @@ class TimeSkill(NeonSkill):
     def handle_query_date_simple(self, message):
         self.handle_query_date(message)
 
+    def get_timezone(self, locale: Union[str, dict]) \
+            -> Optional[tzinfo]:
+        """
+        Use a variety of approaches to determine the intended timezone.
+        :param locale: string or dict location to lookup
+        :returns: datetime.tzinfo for the specified locale or default locale
+        """
+        LOG.info(f"Getting tz for locale: {locale}")
+        str_locale = locale if isinstance(locale, str) else locale.get("city")
+        for method in (self._get_timezone_from_neon_utils,
+                       self._get_timezone_from_builtins,
+                       self._get_timezone_from_table,
+                       self._get_timezone_from_fuzzymatch):
+            try:
+                if method == self._get_timezone_from_neon_utils:
+                    tz = method(locale)
+                else:
+                    tz = method(str_locale)
+            except ValueError:
+                tz = None
+            if tz:
+                break
+        return tz
+
+    def get_local_datetime(self, location: Optional[str] = None,
+                           message: Optional[Message] = None) -> \
+            Optional[datetime]:
+        """
+        Get the datetime at the requested location or configured location
+        :param location: Optional string location to look up
+        :param message: Message associated with the request
+        :returns: current datetime object or None if tz not found
+        """
+        message = message or dig_for_message()
+        location = location or \
+            self._extract_location(message.data.get("utterance"))
+
+        if location:  # Lookup the tz for the requested location
+            # Filter out invalid characters from location names
+            location = re.sub('[?!./_-]', ' ', location)
+            tz = self.get_timezone(location)
+        else:  # Get the local tz
+            pref_location = self.preference_location(message)
+            location = f'{pref_location["city"]}, {pref_location["state"]}'
+            try:
+                tz = pytz.timezone(pref_location['tz'])
+            except pytz.UnknownTimeZoneError:
+                tz = None
+            if not tz:  # Config tz invalid, try location lookup
+                LOG.warning("configured timezone invalid or undefined")
+                tz = self.get_timezone({"city": pref_location["city"],
+                                        "state": pref_location["state"],
+                                        "country": pref_location["country"]})
+        if not tz:
+            if location and isinstance(location, str):
+                self.speak_dialog("time.tz.not.found", {"location": location})
+            return None
+
+        now_utc = datetime.now(pytz.timezone('UTC'))
+        return now_utc.astimezone(tz)
+
+    def get_spoken_time(self, location: Optional[str] = None,
+                        message: Optional[Message] = None) -> Optional[str]:
+        """
+        Get a speakable time string for the given location and request params
+        :param location: optional str requested location
+        :param message: optional message associated with request
+        :returns: current time formatted per user preferences if location is
+            valid, else None
+        """
+        # Get a formatted spoken time based on the user preferences
+        dt = self.get_local_datetime(location, message)
+        if not dt:
+            return
+        use_ampm = self.preference_skill(message)['use_ampm']
+        if location:
+            use_ampm = True
+        return nice_time(dt, self.lang, speech=True,
+                         use_24hour=self.use_24hour, use_ampm=use_ampm)
+
     def show_time_gui(self, location: Optional[str], display_time: str,
                       display_date: str):
         """
@@ -509,9 +402,15 @@ class TimeSkill(NeonSkill):
         self.gui['year_string'] = date.strftime("%Y")
         self.gui.show_page('date2.qml')
 
-    def _extract_location(self, utt):
-        # if "Location" in message.data:
-        #     return message.data["Location"]
+    def stop(self):
+        pass
+
+    def _extract_location(self, utt: str) -> Optional[str]:
+        """
+        Patch the regex bug and try extracting a location from the utterance
+        :param utt: string utterance
+        :return: extracted location string if found in utterance
+        """
         rx_file = self.find_resource('location.rx', 'regex')
         if rx_file:
             with open(rx_file) as f:
@@ -527,8 +426,116 @@ class TimeSkill(NeonSkill):
                             pass
         return None
 
-    def stop(self):
-        pass
+    @staticmethod
+    def _get_timezone_from_neon_utils(locale: Union[dict, str]) -> \
+            Optional[tzinfo]:
+        """
+        Lookup timezone using neon_utils
+        :param locale: str location name or dict of city, state, country
+        :returns: datetime.tzinfo object for the specified locale or None
+        """
+        if not locale:
+            raise ValueError("Locale not specified")
+        coords = get_coordinates(locale)
+        if coords == (-1, -1):
+            return None
+        else:
+            tz_name, _ = get_timezone(*coords)
+            return pytz.timezone(tz_name)
+
+    @staticmethod
+    def _get_timezone_from_builtins(locale: str) -> \
+            Optional[tzinfo]:
+        """
+        Lookup timezone using geocoder and TimezoneFinder
+        :param locale: str location name to lookup
+        :returns: datetime.tzinfo object for the specified locale or None
+        """
+        if not isinstance(locale, str):
+            raise ValueError(f"Invalid locale specified: {locale}")
+        if "/" not in locale:
+            try:
+                # This handles common city names, like "Dallas" or "Paris"
+                # first get the lat / long.
+                g = geocoder.osm(locale)
+                # now look it up
+                tf = TimezoneFinder()
+                timezone = tf.timezone_at(lng=g.lng, lat=g.lat)
+                return pytz.timezone(timezone)
+            except ValueError:
+                # Raised by osm and TimezoneFinder for invalid locale or coords
+                pass
+            except Exception as e:
+                LOG.error(e)
+
+        try:
+            # This handles codes like "America/Los_Angeles"
+            return pytz.timezone(locale)
+        except pytz.UnknownTimeZoneError:
+            pass
+        except Exception as e:
+            LOG.error(e)
+        return None
+
+    def _get_timezone_from_table(self, locale: str) -> \
+            Optional[tzinfo]:
+        """
+        Lookup timezone using skill resource files
+        :param locale: str location name to lookup
+        :returns: datetime.tzinfo object for the specified locale or None
+        """
+        if not isinstance(locale, str):
+            raise ValueError(f"Invalid locale specified: {locale}")
+        timezones = self.translate_namedvalues("timezone.value")
+        for tz in timezones:
+            if locale.lower() == tz.lower():
+                # assumes translation is correct
+                return pytz.timezone(timezones[tz].strip())
+        return None
+
+    def _get_timezone_from_fuzzymatch(self, locale: str) -> \
+            Optional[tzinfo]:
+        """
+        Fuzzymatch a location against the pytz timezones.
+        The pytz timezones consists of Location/Name pairs.  For example:
+            ["Africa/Abidjan", "Africa/Accra", ... "America/Denver", ...
+             "America/New_York", ..., "America/North_Dakota/Center", ...
+             "Cuba", ..., "EST", ..., "Egypt", ..., "Etc/GMT+3", ...
+             "Etc/Zulu", ... "US/Eastern", ... "UTC", ..., "Zulu"]
+        :param locale: str location name to lookup
+        :returns: datetime.tzinfo object for the specified locale or None
+        """
+        if not isinstance(locale, str):
+            raise ValueError(f"Invalid locale specified: {locale}")
+        target = locale.lower()
+        best = None
+        pct = 0
+        for name in pytz.all_timezones:
+            # Separate at '/'
+            normalized = name.lower().replace("_", " ").split("/")
+            if len(normalized) == 1:
+                pct = fuzzy_match(normalized[0], target)
+            elif len(normalized) >= 2:
+                # Check for locations like "Sydney"
+                pct1 = fuzzy_match(normalized[1], target)
+                # locations like "Sydney Australia" or "Center North Dakota"
+                pct2 = fuzzy_match(normalized[-2] + " " + normalized[-1],
+                                   target)
+                pct3 = fuzzy_match(normalized[-1] + " " + normalized[-2],
+                                   target)
+                pct = max(pct1, pct2, pct3)
+            if not best or pct >= best[0]:
+                best = (pct, name)
+        if best and best[0] > 0.8:
+            # solid choice
+            return pytz.timezone(best[1])
+        elif best and best[0] > 0.3:
+            say = speakable_timezone(best[1])
+            if self.ask_yesno("did.you.mean.timezone",
+                              data={"zone_name": say}) == "yes":
+                return pytz.timezone(best[1])
+        else:
+            return None
 
 
 def create_skill():
