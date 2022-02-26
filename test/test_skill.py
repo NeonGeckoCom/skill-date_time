@@ -171,7 +171,7 @@ class TestSkill(unittest.TestCase):
     def test_get_month_date(self):
         date_fmt = "MDY"
 
-        def pref_unit():
+        def pref_unit(*_, **__):
             return {"date": date_fmt}
 
         self.skill.preference_unit = pref_unit
