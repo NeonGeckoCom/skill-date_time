@@ -63,7 +63,6 @@ class TestSkill(unittest.TestCase):
         from neon_utils.skills import NeonSkill
 
         self.assertIsInstance(self.skill, NeonSkill)
-        self.assertIsInstance(self.skill.skill_info, list)
 
     def test_handle_idle(self):
         class MockGui:
@@ -102,6 +101,8 @@ class TestSkill(unittest.TestCase):
 
         def pref_unit(*_, **__):
             return {"date": date_fmt}
+
+        real_pref_unit = self.skill.preference_unit
         self.skill.preference_unit = pref_unit
 
         test_date = dt.datetime(month=1, day=2, year=2000)
@@ -120,6 +121,8 @@ class TestSkill(unittest.TestCase):
         now_date_str = self.skill.get_display_date()
         self.assertNotEqual(date_str, now_date_str)
 
+        self.skill.preference_unit = real_pref_unit
+
     def test_get_display_current_time(self):
         current_time = self.skill.get_display_current_time()
         self.assertIsInstance(current_time, str)
@@ -135,6 +138,7 @@ class TestSkill(unittest.TestCase):
         def pref_unit(*_, **__):
             return {'time': time_format}
 
+        real_pref_unit = self.skill.preference_unit
         self.skill.preference_unit = pref_unit
 
         dt_utc = dt.datetime.now(dt.timezone.utc).replace(hour=23, minute=30)
@@ -156,6 +160,8 @@ class TestSkill(unittest.TestCase):
         az_time = self.skill.get_display_current_time("phoenix", dt_utc)
         self.assertEqual(az_time, "4:30")
 
+        self.skill.preference_unit = real_pref_unit
+
     def test_get_weekday(self):
         self.assertIsInstance(self.skill.get_weekday(), str)
         today = dt.datetime.now(dt.timezone.utc)
@@ -174,6 +180,7 @@ class TestSkill(unittest.TestCase):
         def pref_unit(*_, **__):
             return {"date": date_fmt}
 
+        real_pref_unit = self.skill.preference_unit
         self.skill.preference_unit = pref_unit
 
         test_date = dt.datetime(month=1, day=1, year=2000)
@@ -191,6 +198,8 @@ class TestSkill(unittest.TestCase):
 
         now_date_str = self.skill.get_month_date()
         self.assertNotEqual(date_str, now_date_str)
+
+        self.skill.preference_unit = real_pref_unit
 
     def test_get_year(self):
         self.assertIsInstance(self.skill.get_year(), str)
