@@ -242,12 +242,12 @@ class TestSkill(unittest.TestCase):
         self.assertEqual(call_args[1]["location"], "London")
         self.assertEqual(set(call_args[1].keys()), {"location", "time"})
 
-    def test_handle_query_time_simple(self):
+    def test_handle_current_time_simple(self):
         real_method = self.skill.handle_query_time
         self.skill.handle_query_time = Mock()
 
         test_message = Message("test", {"data": "val"})
-        self.skill.handle_query_time_simple(test_message)
+        self.skill.handle_current_time_simple(test_message)
         self.skill.handle_query_time.assert_called_once_with(test_message)
 
         self.skill.handle_query_time = real_method
