@@ -368,6 +368,7 @@ class TimeSkill(NeonSkill):
         use_ampm = self.preference_skill(message)['use_ampm']
         if location:
             use_ampm = True
+        load_language(self.lang)
         return nice_time(dt, self.lang, speech=True,
                          use_24hour=self.use_24hour, use_ampm=use_ampm)
 

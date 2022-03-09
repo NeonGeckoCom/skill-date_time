@@ -24,6 +24,7 @@ import datetime as dt
 
 from os import mkdir
 from os.path import dirname, join, exists
+
 from mock import Mock
 from mycroft_bus_client import Message
 from ovos_utils.messagebus import FakeBus
@@ -218,6 +219,114 @@ class TestSkill(unittest.TestCase):
             self.assertFalse(self.skill.is_leap_year(year))
         for year in (2000, 2004, 2008):
             self.assertTrue(self.skill.is_leap_year(year))
+
+    def test_handle_query_time(self):
+        default_location_message = Message("test_message",
+                                           {"Query": "what",
+                                            "Time": "time",
+                                            "utterance": "what time is it"})
+        self.skill.handle_query_time(default_location_message)
+        self.skill.speak_dialog.assert_called_once()
+        call_args = self.skill.speak_dialog.call_args[0]
+        self.assertEqual(call_args[0], "time.current")
+        self.assertEqual(set(call_args[1].keys()), {"time"})
+
+        spec_location_message = Message("test_message",
+                                        {"Query": "what",
+                                         "Time": "time",
+                                         "Location": "london",
+                                         "utterance": "what time is it in london"})
+        self.skill.handle_query_time(spec_location_message)
+        call_args = self.skill.speak_dialog.call_args[0]
+        self.assertEqual(call_args[0], "TimeInLocation")
+        self.assertEqual(call_args[1]["location"], "London")
+        self.assertEqual(set(call_args[1].keys()), {"location", "time"})
+
+    def test_handle_query_time_simple(self):
+        real_method = self.skill.handle_query_time
+        self.skill.handle_query_time = Mock()
+
+        test_message = Message("test", {"data": "val"})
+        self.skill.handle_query_time_simple(test_message)
+        self.skill.handle_query_time.assert_called_once_with(test_message)
+
+        self.skill.handle_query_time = real_method
+
+    def test_handle_query_date(self):
+        default_location_message = Message("test_message",
+                                           {"Query": "what",
+                                            "Date": "date",
+                                            "utterance": "what is the date"})
+        self.skill.handle_query_date(default_location_message)
+        self.skill.speak_dialog.assert_called_once()
+        call_args = self.skill.speak_dialog.call_args[0]
+        self.assertEqual(call_args[0], "date")
+        self.assertEqual(set(call_args[1].keys()), {"date"})
+
+    def test_handle_query_date_simple(self):
+        real_method = self.skill.handle_query_date
+        self.skill.handle_query_date = Mock()
+
+        test_message = Message("test", {"data": "val"})
+        self.skill.handle_query_date_simple(test_message)
+        self.skill.handle_query_date.assert_called_once_with(test_message)
+
+        self.skill.handle_query_date = real_method
+
+    def test_get_timezone(self):
+        from pytz import timezone
+
+        test_cases = [
+            "seattle",
+            "seattle washington",
+            "seattle, wa",
+            {"city": "seattle"},
+            {"city": "seattle", "state": "washington"},
+            {"city": "seattle", "country": "united states"},
+            "pacific time",
+            "los angeles time"
+        ]
+        valid_tz = timezone("America/Los_Angeles")
+        for case in test_cases:
+            tz = self.skill.get_timezone(case)
+            self.assertIsInstance(tz, dt.tzinfo)
+            self.assertEqual(tz, valid_tz)
+
+    def test_get_local_datetime(self):
+        # TODO
+        pass
+
+    def test_get_spoken_time(self):
+        # TODO
+        pass
+
+    def test_show_time_gui(self):
+        # TODO
+        pass
+
+    def test_show_date_gui(self):
+        # TODO
+        pass
+
+    def test_extract_location(self):
+        # TODO
+        pass
+
+    def test_get_timezone_from_neon_utils(self):
+        # TODO
+        pass
+
+    def test_get_timezone_from_builtins(self):
+        # TODO
+        pass
+
+    def test_get_timezone_from_table(self):
+        # TODO
+        pass
+
+    def test_get_timezone_from_fuzzymatch(self):
+        # TODO
+        pass
 
 
 if __name__ == '__main__':
