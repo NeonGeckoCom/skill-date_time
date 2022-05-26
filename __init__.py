@@ -105,15 +105,18 @@ class TimeSkill(NeonSkill):
         self.gui.show_page('idle.qml')
 
     @skill_api_method
+    @resolve_message
     def get_display_date(self, day: Optional[datetime] = None,
-                         location: Optional[str] = None) -> str:
+                         location: Optional[str] = None,
+                         message: Message = None) -> str:
         """
         Get the full date for day or location in the configured format.
         :param day: datetime object to display
         :param location: location to get the current datetime of
+        :param message: Message containing user profile for request
         :returns: The full date in the user configured format
         """
-        unit_prefs = get_user_prefs()['units']
+        unit_prefs = get_user_prefs(message)['units']
         if not day:
             day = self.get_local_datetime(location, None)
         if unit_prefs.get('date') == 'MDY':
@@ -126,8 +129,10 @@ class TimeSkill(NeonSkill):
             return day.strftime("%Y/%-d/%-m")
 
     @skill_api_method
+    @resolve_message
     def get_display_current_time(self, location: Optional[str] = None,
-                                 dt_utc: Optional[datetime] = None) -> \
+                                 dt_utc: Optional[datetime] = None,
+                                 message: Message = None) -> \
             Optional[str]:
         """
         Get a formatted digital clock time based on the user preferences
@@ -135,10 +140,11 @@ class TimeSkill(NeonSkill):
         :param dt_utc: UTC datetime to override current datetime
         :param: Time in the user configured format if location is valid
             else None
+        :param message: Message containing user profile for request
         :returns: Formatted string time or None if Exception
         """
         try:
-            dt = self.get_local_datetime(location)
+            dt = self.get_local_datetime(location, message)
             if dt_utc:
                 if location:
                     dt = dt_utc.astimezone(dt.tzinfo)
