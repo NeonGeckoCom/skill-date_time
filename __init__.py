@@ -182,15 +182,17 @@ class TimeSkill(NeonSkill):
 
     @skill_api_method
     def get_month_date(self, day: Optional[datetime] = None,
-                       location: Optional[str] = None) -> str:
+                       location: Optional[str] = None,
+                       message: Message = None) -> str:
         """
         Get the month and date for a given day and location
         :param day: optional datetime object to get month and date for
         :param location: optional location to get the current datetime of
+        :param message: Message containing user profile for request
         :returns: date in the format DD MONTH or MONTH DD
             depending on the users date_format setting.
         """
-        message = dig_for_message()
+        message = message or dig_for_message()
         unit_prefs = get_user_prefs(message)["units"]
         if not day:
             day = self.get_local_datetime(location, None)
