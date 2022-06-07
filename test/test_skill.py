@@ -261,16 +261,6 @@ class TestSkill(unittest.TestCase):
         self.assertEqual(call_args[0], "date")
         self.assertEqual(set(call_args[1].keys()), {"date"})
 
-    def test_handle_query_date_simple(self):
-        real_method = self.skill.handle_query_date
-        self.skill.handle_query_date = Mock()
-
-        test_message = Message("test", {"data": "val"})
-        self.skill.handle_query_date_simple(test_message)
-        self.skill.handle_query_date.assert_called_once_with(test_message)
-
-        self.skill.handle_query_date = real_method
-
     def test_get_timezone(self):
         from pytz import timezone
 
