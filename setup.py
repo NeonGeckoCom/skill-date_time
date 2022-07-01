@@ -32,7 +32,7 @@ from os import getenv, path, walk
 SKILL_NAME = "skill-date_time"
 SKILL_PKG = SKILL_NAME.replace('-', '_')
 # skill_id=package_name:SkillClass
-PLUGIN_ENTRY_POINT = f'{SKILL_NAME}.NeonGeckoCom={SKILL_PKG}:TimeSkill'
+PLUGIN_ENTRY_POINT = f'{SKILL_NAME}.neongeckocom={SKILL_PKG}:TimeSkill'
 
 
 def get_requirements(requirements_filename: str):
