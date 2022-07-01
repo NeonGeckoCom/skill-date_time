@@ -3,4 +3,4 @@ geocoder~=1.38
 timezonefinder~=5.2
 mycroft-messagebus-client~=0.9
 ovos_utils~=0.0.12
-neon_utils~=0.14
+neon_utils~=1.0,>=1.0.0a1
