@@ -19,7 +19,7 @@
         "python": [
             "geocoder~=1.38",
             "mycroft-messagebus-client~=0.9",
-            "neon_utils~=0.14",
+            "neon_utils~=1.0,>=1.0.0a1",
             "ovos_utils~=0.0.12",
             "pytz~=2017.2",
             "timezonefinder~=5.2"
