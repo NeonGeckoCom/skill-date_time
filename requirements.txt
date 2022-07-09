@@ -1,4 +1,4 @@
-pytz~=2017.2
+pytz>=2017.2,<=2022.1
 geocoder~=1.38
 timezonefinder~=5.2
 mycroft-messagebus-client~=0.9
