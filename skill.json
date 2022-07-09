@@ -21,7 +21,7 @@
             "mycroft-messagebus-client~=0.9",
             "neon_utils>=0.14.0,<2.0.0",
             "ovos_utils~=0.0.12",
-            "pytz~=2017.2",
+            "pytz>=2017.2,<=2022.1",
             "timezonefinder~=5.2"
         ],
         "system": {},
