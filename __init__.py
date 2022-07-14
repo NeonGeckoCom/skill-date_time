@@ -119,6 +119,7 @@ class TimeSkill(NeonSkill):
         message = message or dig_for_message()
         date_format = get_user_prefs(message)["units"].get('date') if message \
             else self.config_core.get('date_format')
+        LOG.info(f"Getting date with format: {date_format}")
         if not day:
             day = self.get_local_datetime(location, None)
         if date_format == 'MDY':
@@ -198,6 +199,7 @@ class TimeSkill(NeonSkill):
         message = message or dig_for_message()
         date_format = get_user_prefs(message)["units"].get('date') if message \
             else self.config_core.get('date_format')
+        LOG.info(f"Getting date with format: {date_format}")
         if not day:
             day = self.get_local_datetime(location, None)
         if self.lang in date_time_format.lang_config.keys():
@@ -207,6 +209,7 @@ class TimeSkill(NeonSkill):
         else:
             month = day.strftime("%B")
         month = month.capitalize()
+        LOG.info(f"month={month}")
         if "MD" in date_format:  # YMD, MDY
             return f"{month} {day.strftime('%d')}"
         else:  # DMY
