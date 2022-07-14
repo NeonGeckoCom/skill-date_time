@@ -117,14 +117,15 @@ class TimeSkill(NeonSkill):
         :returns: The full date in the user configured format
         """
         message = message or dig_for_message()
-        unit_prefs = get_user_prefs(message)['units']
+        date_format = get_user_prefs(message)["units"].get('date') if message \
+            else self.config_core.get('date_format')
         if not day:
             day = self.get_local_datetime(location, None)
-        if unit_prefs.get('date') == 'MDY':
+        if date_format == 'MDY':
             return day.strftime("%-m/%-d/%Y")
-        elif unit_prefs.get('date') == 'YMD':
+        elif date_format == 'YMD':
             return day.strftime("%Y/%-m/%-d")
-        elif unit_prefs.get('date') == "DMY":
+        elif date_format == "DMY":
             return day.strftime("%-d/%-m/%Y")
         else:
             return day.strftime("%Y/%-d/%-m")
@@ -195,7 +196,8 @@ class TimeSkill(NeonSkill):
             depending on the users date_format setting.
         """
         message = message or dig_for_message()
-        unit_prefs = get_user_prefs(message)["units"]
+        date_format = get_user_prefs(message)["units"].get('date') if message \
+            else self.config_core.get('date_format')
         if not day:
             day = self.get_local_datetime(location, None)
         if self.lang in date_time_format.lang_config.keys():
@@ -205,7 +207,7 @@ class TimeSkill(NeonSkill):
         else:
             month = day.strftime("%B")
         month = month.capitalize()
-        if "MD" in unit_prefs.get('date'):  # YMD, MDY
+        if "MD" in date_format:  # YMD, MDY
             return f"{month} {day.strftime('%d')}"
         else:  # DMY
             return f"{day.strftime('%d')} {month}"
