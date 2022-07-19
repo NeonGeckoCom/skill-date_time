@@ -322,7 +322,7 @@ class TestSkill(unittest.TestCase):
                          timezone("America/Chicago"))
 
     def test_get_timezone_from_fuzzymatch(self):
-        self.assertEqual(self.skill._get_timezone_from_fuzzymatch("seattle"),
+        self.assertEqual(self.skill._get_timezone_from_fuzzymatch("los angeles"),
                          timezone("America/Los_Angeles"))
 
 
