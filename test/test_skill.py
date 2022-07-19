@@ -263,25 +263,25 @@ class TestSkill(unittest.TestCase):
 
     def test_get_timezone(self):
         la_timezone = timezone("America/Los_Angeles")
-        test_cases = [
+        dict_test_cases = [
             {"city": "seattle"},
             {"city": "seattle", "state": "washington"},
             {"city": "seattle", "country": "united states"},
             # "pacific time",
             "los angeles time"
         ]
-        for case in test_cases:
+        for case in dict_test_cases:
             tz = self.skill.get_timezone(case)
             self.assertIsInstance(tz, dt.tzinfo)
             self.assertEqual(tz, la_timezone)
-        edge_cases = {
+        str_test_cases = {
             "seattle": la_timezone,
             "seattle washington": la_timezone,
             "seattle, wa": la_timezone,
             "paris texas": timezone("America/Chicago")
         }
-        for case in edge_cases:
-            self.assertEqual(self.skill.get_timezone(case), edge_cases[case])
+        for case in str_test_cases:
+            self.assertEqual(self.skill.get_timezone(case), str_test_cases[case])
 
     def test_get_local_datetime(self):
         # TODO
