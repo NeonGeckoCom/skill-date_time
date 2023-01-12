@@ -154,6 +154,7 @@ class TimeSkill(NeonSkill):
             if not dt:
                 return None
             load_language(self.lang)
+            LOG.debug(f"Got time: {dt.isoformat()} | use_24h={self.use_24hour}")
             # noinspection PyTypeChecker
             return nice_time(dt, self.lang, speech=False,
                              use_24hour=self.use_24hour,
@@ -348,6 +349,7 @@ class TimeSkill(NeonSkill):
             try:
                 tz = pytz.timezone(self.location_timezone)
             except pytz.UnknownTimeZoneError:
+                LOG.error(f"No timezone found for: {self.location_timezone}")
                 tz = None
             if not tz:  # Config tz invalid, try location lookup
                 LOG.warning("configured timezone invalid or undefined")
