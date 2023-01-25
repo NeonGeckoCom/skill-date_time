@@ -1,21 +1,31 @@
-# NEON AI (TM) SOFTWARE, Software Development Kit & Application Development System
-#
-# Copyright 2008-2021 Neongecko.com Inc. | All Rights Reserved
-#
-# Notice of License - Duplicating this Notice of License near the start of any file containing
-# a derivative of this software is a condition of license for this software.
-# Friendly Licensing:
-# No charge, open source royalty free use of the Neon AI software source and object is offered for
-# educational users, noncommercial enthusiasts, Public Benefit Corporations (and LLCs) and
-# Social Purpose Corporations (and LLCs). Developers can contact developers@neon.ai
-# For commercial licensing, distribution of derivative works or redistribution please contact licenses@neon.ai
-# Distributed on an "AS IS” basis without warranties or conditions of any kind, either express or implied.
-# Trademarks of Neongecko: Neon AI(TM), Neon Assist (TM), Neon Communicator(TM), Klat(TM)
-# Authors: Guy Daniels, Daniel McKnight, Regina Bloomstine, Elon Gasper, Richard Leeds
-#
-# Specialized conversational reconveyance options from Conversation Processing Intelligence Corp.
-# US Patents 2008-2021: US7424516, US20140161250, US20140177813, US8638908, US8068604, US8553852, US10530923, US10530924
-# China Patent: CN102017585  -  Europe Patent: EU2156652  -  Patents Pending
+# NEON AI (TM) SOFTWARE, Software Development Kit & Application Framework
+# All trademark and other rights reserved by their respective owners
+# Copyright 2008-2022 Neongecko.com Inc.
+# Contributors: Daniel McKnight, Guy Daniels, Elon Gasper, Richard Leeds,
+# Regina Bloomstine, Casimiro Ferreira, Andrii Pernatii, Kirill Hrymailo
+# BSD-3 License
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+#    this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+# 3. Neither the name of the copyright holder nor the names of its
+#    contributors may be used to endorse or promote products derived from this
+#    software without specific prior written permission.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# CONTRIBUTORS  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+# OR PROFITS;  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 import datetime
 import shutil
 import unittest
@@ -130,46 +140,57 @@ class TestSkill(unittest.TestCase):
         config = get_default_user_config()
         config['user']['username'] = 'test_user'
 
-
+        # Default behavior
         current_time = self.skill.get_display_current_time()
         self.assertIsInstance(current_time, str)
         self.assertEqual(len(current_time.split(':')), 2)
 
+        # Specify location
         current_time_honolulu = self.skill.get_display_current_time("honolulu")
         self.assertIsInstance(current_time_honolulu, str)
-        self.assertEqual(len(current_time.split(':')), 2)
+        self.assertEqual(len(current_time_honolulu.split(':')), 2)
+        self.assertIn('m', current_time_honolulu.lower())
         self.assertNotEqual(current_time, current_time_honolulu)
 
         config['units']['time'] = 24
         test_message = Message("test", {}, {"username": "test_user",
                                             "user_profiles": [config]})
 
+        # Default location, specify time 24h
         dt_utc = dt.datetime.now(dt.timezone.utc).replace(hour=23, minute=30)
         utc_time = self.skill.get_display_current_time(dt_utc=dt_utc,
                                                        message=test_message)
         self.assertEqual(utc_time, "23:30")
+
+        # Specify location, 24h
         az_time = self.skill.get_display_current_time("phoenix", dt_utc,
                                                       message=test_message)
         self.assertEqual(az_time, "16:30")
 
         self.skill.settings['use_ampm'] = True
         config['units']['time'] = 12
+
+        # Default location with AM/PM
         test_message = Message("test", {}, {"username": "test_user",
                                             "user_profiles": [config]})
         utc_time = self.skill.get_display_current_time(dt_utc=dt_utc,
                                                        message=test_message)
         self.assertEqual(utc_time, "11:30 PM")
+
+        # Specify location with AM/PM
         az_time = self.skill.get_display_current_time("phoenix", dt_utc,
                                                       message=test_message)
         self.assertEqual(az_time, "4:30 PM")
 
         self.skill.settings['use_ampm'] = False
+        # Default location, no AM/PM
         utc_time = self.skill.get_display_current_time(dt_utc=dt_utc,
                                                        message=test_message)
         self.assertEqual(utc_time, "11:30")
+        # Specify location, always shows AM/PM
         az_time = self.skill.get_display_current_time("phoenix", dt_utc,
                                                       message=test_message)
-        self.assertEqual(az_time, "4:30")
+        self.assertEqual(az_time, "4:30 PM")
 
     def test_get_weekday(self):
         self.assertIsInstance(self.skill.get_weekday(), str)
@@ -284,20 +305,134 @@ class TestSkill(unittest.TestCase):
             self.assertEqual(self.skill.get_timezone(case), str_test_cases[case])
 
     def test_get_local_datetime(self):
-        # TODO
-        pass
+        # Test datetime, no location
+        test_location = {"city": "Kirkland",
+                         "state": "Washington",
+                         "country": "USA",
+                         "tz": "America/Los_Angeles"}
+        test_message = Message("", context={"username": "test_user",
+                                            "user_profiles": [{
+                                                "user": {
+                                                    "username": "test_user"},
+                                                "location": test_location}
+                                            ]})
+        time_la = self.skill.get_local_datetime(None, test_message)
+        self.assertAlmostEqual(time_la.timestamp(),
+                               datetime.datetime.now(timezone(
+                                   "America/Los_Angeles")).timestamp(), 0)
+
+        test_location = {"city": "New York",
+                         "state": "New York",
+                         "country": "USA",
+                         "tz": "America/New_York"}
+        test_message = Message("", context={"username": "test_user",
+                                            "user_profiles": [{
+                                                "user": {
+                                                    "username": "test_user"},
+                                                "location": test_location}
+                                            ]})
+        time_ny = self.skill.get_local_datetime(None, test_message)
+        self.assertAlmostEqual(time_ny.timestamp(),
+                               datetime.datetime.now(timezone(
+                                   "America/New_York")).timestamp(), 0)
+
+        self.assertNotEqual(time_la.tzinfo, time_ny.tzinfo)
+
+        # Test datetime with location
+        time = self.skill.get_local_datetime("Chicago")
+        self.assertAlmostEqual(time.timestamp(),
+                               datetime.datetime.now(timezone(
+                                   "America/Chicago")).timestamp(), 0)
+
+        # Test datetime invalid location
+        real_gettz = self.skill.get_timezone
+        self.skill.get_timezone = Mock(return_value=None)
+        self.skill.get_local_datetime("Not a real place")
+        self.skill.get_timezone.assert_called_with("Not a real place")
+        self.skill.speak_dialog.assert_called_once_with(
+            "time.tz.not.found", {"location": "Not a real place"})
+        self.skill.get_timezone = real_gettz
 
     def test_get_spoken_time(self):
-        # TODO
-        pass
+        # Test no location
+        test_location = {"city": "Kirkland",
+                         "state": "Washington",
+                         "country": "USA",
+                         "tz": "America/Los_Angeles"}
+        test_message = Message("", context={"username": "test_user",
+                                            "user_profiles": [{
+                                                "user": {
+                                                    "username": "test_user"},
+                                                "location": test_location}
+                                            ]})
+        # Skill specifies ampm, user default time format (12)
+        self.skill.settings['use_ampm'] = True
+        time = self.skill.get_spoken_time(message=test_message)
+        self.assertIn('m', time)
+
+        # Skill specifies ampm but user uses 24-hour time
+        test_message.context['user_profiles'][0]['units'] = {"time": 24}
+        time = self.skill.get_spoken_time(message=test_message)
+        self.assertNotIn('m', time)
+
+        # Skill specifies no ampm, user uses 12-hour time
+        test_message.context['user_profiles'][0]['units'] = {"time": 12}
+        self.skill.settings['use_ampm'] = False
+        time = self.skill.get_spoken_time(message=test_message)
+        self.assertNotIn('m', time)
+
+        # Test with location, default 12-hour time
+        time = self.skill.get_spoken_time("Seattle")
+        self.assertIn('m', time)
+
+        time = self.skill.get_spoken_time("Lawrence, Kansas")
+        self.assertIn('m', time)
 
     def test_show_time_gui(self):
-        # TODO
-        pass
+        real_gui = self.skill.gui.show_page
+        self.skill.gui.show_page = Mock()
+
+        # Default location, with AM/PM
+        self.skill.show_time_gui(None, "12:30 PM", "Date")
+        self.assertEqual(self.skill.gui['location'], "")
+        self.assertEqual(self.skill.gui['hours'], "12")
+        self.assertEqual(self.skill.gui['minutes'], "30")
+        self.assertEqual(self.skill.gui['ampm'], "PM")
+        self.assertEqual(self.skill.gui['date_string'], "Date")
+        self.skill.gui.show_page.assert_called_with("time.qml")
+
+        # Default location, no AM/PM
+        self.skill.show_time_gui(None, "12:30", "Date")
+        self.assertEqual(self.skill.gui['location'], "")
+        self.assertEqual(self.skill.gui['hours'], "12")
+        self.assertEqual(self.skill.gui['minutes'], "30")
+        self.assertEqual(self.skill.gui['ampm'], "")
+        self.assertEqual(self.skill.gui['date_string'], "Date")
+        self.skill.gui.show_page.assert_called_with("time.qml")
+
+        # With location
+        self.skill.show_time_gui("seattle", "12:30", "Date")
+        self.assertEqual(self.skill.gui['location'], "Seattle")
+        self.assertEqual(self.skill.gui['hours'], "12")
+        self.assertEqual(self.skill.gui['minutes'], "30")
+        self.assertEqual(self.skill.gui['ampm'], "")
+        self.assertEqual(self.skill.gui['date_string'], "Date")
+        self.skill.gui.show_page.assert_called_with("time.qml")
+
+        self.skill.gui.show_page = real_gui
 
     def test_show_date_gui(self):
-        # TODO
-        pass
+        real_gui = self.skill.gui.show_page
+        self.skill.gui.show_page = Mock()
+
+        date = datetime.datetime.now().replace(year=2023, month=1, day=25)
+        self.skill.show_date_gui(date)
+        self.assertEqual(self.skill.gui['weekday_string'], date.strftime("%A"))
+        self.assertEqual(self.skill.gui['monthday_string'],
+                         date.strftime("%B %-d"))
+        self.assertEqual(self.skill.gui['year_string'], "2023")
+        self.skill.gui.show_page.assert_called_with("date2.qml")
+        self.skill.gui.show_page = real_gui
 
     def test_extract_location(self):
         # TODO

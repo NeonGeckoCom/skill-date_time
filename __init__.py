@@ -155,11 +155,12 @@ class TimeSkill(NeonSkill):
                 return None
             load_language(self.lang)
             LOG.debug(f"Got time: {dt.isoformat()} | use_24h={self.use_24hour}")
+            use_ampm = True if location else \
+                self.preference_skill().get('use_ampm', False)
             # noinspection PyTypeChecker
             return nice_time(dt, self.lang, speech=False,
                              use_24hour=self.use_24hour,
-                             use_ampm=self.preference_skill().get('use_ampm',
-                                                                  False))
+                             use_ampm=use_ampm)
         except Exception as e:
             LOG.error(e)
             return None
@@ -389,8 +390,8 @@ class TimeSkill(NeonSkill):
         """
         Display time GUI
         :param location: optional string name of the requested location
-        :param display_time: string time to display
-        :param display_date: string date to display
+        :param display_time: formatted string time to display
+        :param display_date: formatted string date to display
         """
         self.gui.clear()
         LOG.info(location)
@@ -405,8 +406,6 @@ class TimeSkill(NeonSkill):
             location = location.title()
         else:
             location = ""
-        if not self.preference_skill().get('use_ampm', False):
-            ampm = ""
         self.gui["location"] = location
         self.gui['hours'] = hours
         self.gui['minutes'] = minutes
