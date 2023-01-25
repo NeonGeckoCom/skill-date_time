@@ -345,9 +345,13 @@ class TestSkill(unittest.TestCase):
                                    "America/Chicago")).timestamp(), 0)
 
         # Test datetime invalid location
+        real_gettz = self.skill.get_timezone
+        self.skill.get_timezone = Mock(return_value=None)
         self.skill.get_local_datetime("Not a real place")
+        self.skill.get_timezone.assert_called_with("Not a real place")
         self.skill.speak_dialog.assert_called_once_with(
             "time.tz.not.found", {"location": "Not a real place"})
+        self.skill.get_timezone = real_gettz
 
     def test_get_spoken_time(self):
         # Test no location
