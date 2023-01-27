@@ -1,0 +1,17 @@
+en-us:
+  QueryTime:
+    - what time is it:
+      - Query: what
+      - Time: time
+    - tell me the time in paris:
+      - Query: tell
+      - Time: time
+      - Location: paris
+  QueryDate:
+    - what is the day today:
+      - Query: what
+      - Date: day
+    - tell me the date in paris:
+      - Query: tell
+      - Date: date
+      - Location: paris

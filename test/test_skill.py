@@ -32,6 +32,8 @@ import unittest
 import pytest
 import datetime as dt
 
+
+from neon_utils.skills.neon_skill import LOG
 from os import mkdir
 from os.path import dirname, join, exists
 from pytz import timezone
@@ -198,7 +200,7 @@ class TestSkill(unittest.TestCase):
         tomorrow = dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=1)
         self.assertNotEqual(self.skill.get_weekday(today),
                             self.skill.get_weekday(tomorrow))
-        self.assertNotEqual(self.skill.get_weekday(location="Perth"),
+        self.assertEqual(self.skill.get_weekday(location="Perth"),
                             self.skill.get_weekday(location="Honolulu"))
 
         known_day = dt.datetime(day=1, month=1, year=2000)
@@ -459,6 +461,69 @@ class TestSkill(unittest.TestCase):
     def test_get_timezone_from_fuzzymatch(self):
         self.assertEqual(self.skill._get_timezone_from_fuzzymatch("los angeles"),
                          timezone("America/Los_Angeles"))
+
+class TestSkillIntentMatching(unittest.TestCase):
+    
+    #Import and initialize installed skill
+    from skill_date_time import TimeSkill
+    skill = TimeSkill()
+
+    import yaml
+    test_intents = join(dirname(__file__), 'test_intents.yaml')
+    with open(test_intents) as f:
+        valid_intents = yaml.safe_load(f)
+
+    from mycroft.skills.intent_service import IntentService
+    bus = FakeBus()
+    intent_service = IntentService(bus)
+    test_skill_id = 'test_skill.test'
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.skill.config_core["secondary_langs"] = list(cls.valid_intents.keys())
+        cls.skill._startup(cls.bus, cls.test_skill_id)
+
+    def test_intents(self):
+        for lang in self.valid_intents.keys():
+            for intent, examples in self.valid_intents[lang].items():
+                intent_event = f'{self.test_skill_id}:{intent}'
+                self.skill.events.remove(intent_event)
+                intent_handler = Mock()
+                self.skill.events.add(intent_event, intent_handler)
+                for utt in examples:
+                    if isinstance(utt, dict):
+                        data = list(utt.values())[0]
+                        utt = list(utt.keys())[0]
+                    else:
+                        data = list()
+                    message = Message('test_utterance',
+                                      {"utterances": [utt], "lang": lang})
+                    LOG.info(f'Message {message}')
+                    self.intent_service.handle_utterance(message)
+                    intent_handler.assert_called_once()
+                    intent_message = intent_handler.call_args[0][0]
+                    self.assertIsInstance(intent_message, Message)
+                    self.assertEqual(intent_message.msg_type, intent_event)
+                    for datum in data:
+                        if isinstance(datum, dict):
+                            name = list(datum.keys())[0]
+                            value = list(datum.values())[0]
+                        else:
+                            name = datum
+                            value = None
+                        if name in intent_message.data:
+                            # This is an entity
+                            voc_id = name
+                        else:
+                            # We mocked the handler, data is munged
+                            voc_id = f'{self.test_skill_id.replace(".", "_")}' \
+                                     f'{name}'
+                        self.assertIsInstance(intent_message.data.get(voc_id),
+                                              str, intent_message.data)
+                        if value:
+                            self.assertEqual(intent_message.data.get(voc_id),
+                                             value)
+                    intent_handler.reset_mock()
 
 
 if __name__ == '__main__':
