@@ -1,6 +1,6 @@
-pytz>=2017.2,<=2022.1
+pytz>=2017.2
 geocoder~=1.38
 timezonefinder~=5.2
 mycroft-messagebus-client~=0.9
-ovos_utils~=0.0.12
-neon_utils>=0.14.0,<2.0.0
+ovos_utils~=0.0.12,>=0.0.28a7
+neon_utils~=1.0
