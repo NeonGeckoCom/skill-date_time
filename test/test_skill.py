@@ -32,6 +32,8 @@ import unittest
 import pytest
 import datetime as dt
 
+
+from neon_utils.skills.neon_skill import LOG
 from os import mkdir
 from os.path import dirname, join, exists
 from pytz import timezone
@@ -198,8 +200,8 @@ class TestSkill(unittest.TestCase):
         tomorrow = dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=1)
         self.assertNotEqual(self.skill.get_weekday(today),
                             self.skill.get_weekday(tomorrow))
-        self.assertNotEqual(self.skill.get_weekday(location="Perth"),
-                            self.skill.get_weekday(location="Honolulu"))
+        self.assertEqual(self.skill.get_weekday(location="Seattle"),
+                         self.skill.get_weekday(location="Portland"))
 
         known_day = dt.datetime(day=1, month=1, year=2000)
         self.assertEqual(self.skill.get_weekday(known_day), "Saturday")
