@@ -6,9 +6,9 @@ languages:
 
 # vocab is lowercase .voc file basenames
 vocab:
-  - Date
-  - Query
-  - Time
+  - date
+  - query
+  - time
 
 # dialog is .dialog file basenames (case-sensitive)
 dialog:
