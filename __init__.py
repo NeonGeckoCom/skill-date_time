@@ -264,7 +264,7 @@ class TimeSkill(NeonSkill):
         """
         return (year % 400 == 0) or ((year % 4 == 0) and (year % 100 != 0))
 
-    @intent_handler(IntentBuilder("QueryTime")
+    @intent_handler(IntentBuilder("QueryTimeIntent")
                     .require("Query").require("Time")
                     .optionally("Location"))
     @intent_file_handler("what.time.is.it.intent")
@@ -293,7 +293,7 @@ class TimeSkill(NeonSkill):
         else:
             self.speak_dialog("time.current", {"time": current_time})
 
-    @intent_handler(IntentBuilder("QueryDate")
+    @intent_handler(IntentBuilder("QueryDateIntent")
                     .require("Query").require("Date")
                     .optionally("Location"))
     def handle_query_date(self, message: Message):
