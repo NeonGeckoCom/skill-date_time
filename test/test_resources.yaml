@@ -16,9 +16,9 @@ dialog:
   - time.current
   - time.tz.not.found
   - TimeInLocation
-# regex entities, not necessarily filenames
+# lowercased regex entities, not necessarily filenames
 regex:
-  - Location
+  - location
 intents:
   # Padatious intents are the `.intent` file names
   padatious:
