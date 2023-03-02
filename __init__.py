@@ -448,7 +448,13 @@ class TimeSkill(NeonSkill):
         :param utt: string utterance
         :return: extracted location string if found in utterance
         """
+        if not utt:
+            LOG.error("Requested location extraction from null utterance!")
+            return None
         rx_file = self.find_resource('location.rx', 'regex')
+        if not rx_file:
+            LOG.error(f"Missing location.rx file!")
+            return None
         if rx_file and utt:
             with open(rx_file) as f:
                 for pat in f.read().splitlines():
