@@ -275,7 +275,8 @@ class TimeSkill(NeonSkill):
         """
         if not request_for_neon(message):
             return
-        location = message.data.get("Location")
+        location = message.data.get("Location") or \
+            self._extract_location(message.data.get("utterance"))
         LOG.info(f"requested location: {location}")
         current_time = self.get_spoken_time(location, message)
 
@@ -303,8 +304,10 @@ class TimeSkill(NeonSkill):
         """
         if not request_for_neon(message):
             return
-        requested_date = self.get_local_datetime(message.data.get("Location"),
-                                                 message)
+        location = message.data.get("Location") or \
+            self._extract_location(message.data.get("utterance"))
+        LOG.info(f"requested location: {location}")
+        requested_date = self.get_local_datetime(location, message)
         if not requested_date:
             # An error should have been spoken by now, location wasn't valid
             return
@@ -350,7 +353,7 @@ class TimeSkill(NeonSkill):
         """
         location = location or \
             (self._extract_location(message.data.get("utterance")) if message
-             else None)
+             and message.data.get("utterance") else None)
 
         if location:  # Lookup the tz for the requested location
             # Filter out invalid characters from location names
