@@ -52,9 +52,12 @@ from mycroft import intent_file_handler
 from timezonefinder import TimezoneFinder
 from mycroft_bus_client import Message
 from ovos_utils.parse import fuzzy_match
+from ovos_utils import classproperty
+from ovos_utils.log import LOG
+from ovos_utils.process_utils import RuntimeRequirements
 from neon_utils.location_utils import get_coordinates, get_timezone
 from adapt.intent import IntentBuilder
-from neon_utils.skills.neon_skill import NeonSkill, LOG
+from neon_utils.skills.neon_skill import NeonSkill
 from neon_utils.message_utils import dig_for_message, request_for_neon
 from neon_utils.user_utils import get_user_prefs
 
@@ -84,6 +87,18 @@ class TimeSkill(NeonSkill):
 
     def __init__(self):
         super(TimeSkill, self).__init__("TimeSkill")
+
+    @classproperty
+    def runtime_requirements(self):
+        return RuntimeRequirements(network_before_load=False,
+                                   internet_before_load=False,
+                                   gui_before_load=False,
+                                   requires_internet=False,
+                                   requires_network=False,
+                                   requires_gui=False,
+                                   no_internet_fallback=True,
+                                   no_network_fallback=True,
+                                   no_gui_fallback=True)
 
     @property
     def use_24hour(self) -> bool:
@@ -155,11 +170,12 @@ class TimeSkill(NeonSkill):
                 return None
             load_language(self.lang)
             LOG.debug(f"Got time: {dt.isoformat()} | use_24h={self.use_24hour}")
+            use_ampm = True if location else \
+                self.preference_skill().get('use_ampm', False)
             # noinspection PyTypeChecker
             return nice_time(dt, self.lang, speech=False,
                              use_24hour=self.use_24hour,
-                             use_ampm=self.preference_skill().get('use_ampm',
-                                                                  False))
+                             use_ampm=use_ampm)
         except Exception as e:
             LOG.error(e)
             return None
@@ -248,7 +264,7 @@ class TimeSkill(NeonSkill):
         """
         return (year % 400 == 0) or ((year % 4 == 0) and (year % 100 != 0))
 
-    @intent_handler(IntentBuilder("QueryTime")
+    @intent_handler(IntentBuilder("QueryTimeIntent")
                     .require("Query").require("Time")
                     .optionally("Location"))
     @intent_file_handler("what.time.is.it.intent")
@@ -259,7 +275,8 @@ class TimeSkill(NeonSkill):
         """
         if not request_for_neon(message):
             return
-        location = message.data.get("Location")
+        location = message.data.get("Location") or \
+            self._extract_location(message.data.get("utterance"))
         LOG.info(f"requested location: {location}")
         current_time = self.get_spoken_time(location, message)
 
@@ -277,7 +294,7 @@ class TimeSkill(NeonSkill):
         else:
             self.speak_dialog("time.current", {"time": current_time})
 
-    @intent_handler(IntentBuilder("QueryDate")
+    @intent_handler(IntentBuilder("QueryDateIntent")
                     .require("Query").require("Date")
                     .optionally("Location"))
     def handle_query_date(self, message: Message):
@@ -287,8 +304,10 @@ class TimeSkill(NeonSkill):
         """
         if not request_for_neon(message):
             return
-        requested_date = self.get_local_datetime(message.data.get("Location"),
-                                                 message)
+        location = message.data.get("Location") or \
+            self._extract_location(message.data.get("utterance"))
+        LOG.info(f"requested location: {location}")
+        requested_date = self.get_local_datetime(location, message)
         if not requested_date:
             # An error should have been spoken by now, location wasn't valid
             return
@@ -334,7 +353,7 @@ class TimeSkill(NeonSkill):
         """
         location = location or \
             (self._extract_location(message.data.get("utterance")) if message
-             else None)
+             and message.data.get("utterance") else None)
 
         if location:  # Lookup the tz for the requested location
             # Filter out invalid characters from location names
@@ -389,8 +408,8 @@ class TimeSkill(NeonSkill):
         """
         Display time GUI
         :param location: optional string name of the requested location
-        :param display_time: string time to display
-        :param display_date: string date to display
+        :param display_time: formatted string time to display
+        :param display_date: formatted string date to display
         """
         self.gui.clear()
         LOG.info(location)
@@ -405,8 +424,6 @@ class TimeSkill(NeonSkill):
             location = location.title()
         else:
             location = ""
-        if not self.preference_skill().get('use_ampm', False):
-            ampm = ""
         self.gui["location"] = location
         self.gui['hours'] = hours
         self.gui['minutes'] = minutes
@@ -434,7 +451,13 @@ class TimeSkill(NeonSkill):
         :param utt: string utterance
         :return: extracted location string if found in utterance
         """
+        if not utt:
+            LOG.error("Requested location extraction from null utterance!")
+            return None
         rx_file = self.find_resource('location.rx', 'regex')
+        if not rx_file:
+            LOG.error(f"Missing location.rx file!")
+            return None
         if rx_file and utt:
             with open(rx_file) as f:
                 for pat in f.read().splitlines():
