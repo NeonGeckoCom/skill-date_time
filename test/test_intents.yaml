@@ -3,6 +3,8 @@ en-us:
     - what time is it:
       - Query: what
       - Time: time
+    - what time is it in Sydney Australia:
+        - Location: sydney australia
     - tell me the time in paris:
       - Query: tell
       - Time: time

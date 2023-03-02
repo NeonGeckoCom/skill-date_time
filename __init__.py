@@ -275,7 +275,8 @@ class TimeSkill(NeonSkill):
         """
         if not request_for_neon(message):
             return
-        location = message.data.get("Location")
+        location = message.data.get("Location") or \
+            self._extract_location(message.data.get("utterance"))
         LOG.info(f"requested location: {location}")
         current_time = self.get_spoken_time(location, message)
 
@@ -303,8 +304,10 @@ class TimeSkill(NeonSkill):
         """
         if not request_for_neon(message):
             return
-        requested_date = self.get_local_datetime(message.data.get("Location"),
-                                                 message)
+        location = message.data.get("Location") or \
+            self._extract_location(message.data.get("utterance"))
+        LOG.info(f"requested location: {location}")
+        requested_date = self.get_local_datetime(location, message)
         if not requested_date:
             # An error should have been spoken by now, location wasn't valid
             return
@@ -350,7 +353,7 @@ class TimeSkill(NeonSkill):
         """
         location = location or \
             (self._extract_location(message.data.get("utterance")) if message
-             else None)
+             and message.data.get("utterance") else None)
 
         if location:  # Lookup the tz for the requested location
             # Filter out invalid characters from location names
@@ -448,7 +451,13 @@ class TimeSkill(NeonSkill):
         :param utt: string utterance
         :return: extracted location string if found in utterance
         """
+        if not utt:
+            LOG.error("Requested location extraction from null utterance!")
+            return None
         rx_file = self.find_resource('location.rx', 'regex')
+        if not rx_file:
+            LOG.error(f"Missing location.rx file!")
+            return None
         if rx_file and utt:
             with open(rx_file) as f:
                 for pat in f.read().splitlines():
