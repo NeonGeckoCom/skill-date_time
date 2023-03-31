@@ -11,7 +11,7 @@ en-us:
     - what time is it in kyiv:
       - Location: kyiv
   what.day.is.it.intent:
-    - what is the day today:
+    - what is the day today
     - tell me the date in paris:
       - Location: paris
 unmatched intents:
