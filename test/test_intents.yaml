@@ -1,6 +1,9 @@
 en-us:
   QueryTimeIntent:
-    - what time is it:
+    - what time is it
+    - what is the time
+    - do you have the time
+    - can you tell me the time
     - what time is it in Sydney Australia:
         - Location: sydney australia
     - tell me the time in paris:
