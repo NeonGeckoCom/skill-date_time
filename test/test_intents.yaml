@@ -5,15 +5,15 @@ en-us:
     - do you have the time
     - can you tell me the time
     - what time is it in sydney australia:
-      - Location: sydney australia
+      - location: sydney australia
     - tell me the time in paris:
-      - Location: paris
+      - location: paris
     - what time is it in kyiv:
-      - Location: kyiv
+      - location: kyiv
   what.day.is.it.intent:
     - what is the day today
     - tell me the date in paris:
-      - Location: paris
+      - location: paris
 unmatched intents:
   en-us:
     - what is time

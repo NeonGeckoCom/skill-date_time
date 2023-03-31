@@ -265,7 +265,7 @@ class TestSkill(unittest.TestCase):
         spec_location_message = Message("test_message",
                                         {"Query": "what",
                                          "Time": "time",
-                                         "Location": "london",
+                                         "location": "london",
                                          "utterance": "what time is it in london"})
         self.skill.handle_query_time(spec_location_message)
         call_args = self.skill.speak_dialog.call_args[0]

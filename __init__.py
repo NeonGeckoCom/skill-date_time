@@ -271,7 +271,7 @@ class TimeSkill(NeonSkill):
         """
         if not request_for_neon(message):
             return
-        location = message.data.get("Location") or \
+        location = message.data.get("location") or \
             self._extract_location(message.data.get("utterance"))
         LOG.info(f"requested location: {location}")
         current_time = self.get_spoken_time(location, message)
@@ -298,7 +298,7 @@ class TimeSkill(NeonSkill):
         """
         if not request_for_neon(message):
             return
-        location = message.data.get("Location") or \
+        location = message.data.get("location") or \
             self._extract_location(message.data.get("utterance"))
         LOG.info(f"requested location: {location}")
         requested_date = self.get_local_datetime(location, message)
