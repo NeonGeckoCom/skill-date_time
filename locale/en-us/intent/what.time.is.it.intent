@@ -1,0 +1,3 @@
+what time is it( (at|in|for) {location}|)
+do you (know|have) the time( (at|in|for) {location}|)
+(what is|tell me|i want to know|i need to know) the (current |)time( (at|in|for) {location}|)

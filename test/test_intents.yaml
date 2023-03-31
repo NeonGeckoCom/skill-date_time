@@ -1,19 +1,23 @@
 en-us:
-  QueryTimeIntent:
-    - what time is it:
-      - Query: what
-      - Time: time
-    - what time is it in Sydney Australia:
-        - Location: sydney australia
+  what.time.is.it.intent:
+    - what time is it
+    - what is the time
+    - do you have the time
+    - can you tell me the time
+    - what time is it in sydney australia:
+      - location: sydney australia
     - tell me the time in paris:
-      - Query: tell
-      - Time: time
-      - Location: paris
-  QueryDateIntent:
-    - what is the day today:
-      - Query: what
-      - Date: day
+      - location: paris
+    - what time is it in kyiv:
+      - location: kyiv
+  what.day.is.it.intent:
+    - what is the day today
     - tell me the date in paris:
-      - Query: tell
-      - Date: date
-      - Location: paris
+      - location: paris
+unmatched intents:
+  en-us:
+    - what is time
+    - what time is the movie
+    - what time is my next alarm
+    - what is a date
+    - translate what time is it to ukrainian
