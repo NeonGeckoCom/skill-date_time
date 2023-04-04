@@ -5,10 +5,7 @@ languages:
   - "en-us"
 
 # vocab is lowercase .voc file basenames
-vocab:
-  - date
-  - query
-  - time
+vocab: []
 
 # dialog is .dialog file basenames (case-sensitive)
 dialog:
@@ -17,13 +14,11 @@ dialog:
   - time.tz.not.found
   - TimeInLocation
 # regex entities, not necessarily filenames
-regex:
-  - Location
+regex: []
 intents:
   # Padatious intents are the `.intent` file names
   padatious:
     - what.time.is.it.intent
+    - what.day.is.it.intent
   # Adapt intents are the name passed to the constructor
-  adapt:
-    - QueryTimeIntent
-    - QueryDateIntent
+  adapt: []
