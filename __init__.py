@@ -48,6 +48,7 @@ from datetime import tzinfo, datetime
 from typing import Union, Optional
 
 from lingua_franca import load_language
+from lingua_franca.format import nice_time, date_time_format, nice_date
 from timezonefinder import TimezoneFinder
 from mycroft_bus_client import Message
 from ovos_utils.parse import fuzzy_match
@@ -55,15 +56,23 @@ from ovos_utils import classproperty
 from ovos_utils.log import LOG
 from ovos_utils.process_utils import RuntimeRequirements
 from neon_utils.location_utils import get_coordinates, get_timezone
-from adapt.intent import IntentBuilder
 from neon_utils.skills.neon_skill import NeonSkill
 from neon_utils.message_utils import dig_for_message, request_for_neon
 from neon_utils.user_utils import get_user_prefs
 
 from mycroft.skills.core import intent_file_handler, resting_screen_handler,\
     skill_api_method
-from mycroft.util.format import nice_time, date_time_format
 
+
+day_to_dialog = {
+    0: "word_monday",
+    1: "word_tuesday",
+    2: "word_wednesday",
+    3: "word_thursday",
+    4: "word_friday",
+    5: "word_saturday",
+    6: "word_sunday"
+}
 
 def speakable_timezone(tz: str) -> str:
     """Convert timezone to a better speakable version
@@ -284,7 +293,7 @@ class TimeSkill(NeonSkill):
                            self.get_display_current_time(location),
                            self.get_display_date(location=location))
         if location:
-            self.speak_dialog("TimeInLocation",
+            self.speak_dialog("date_time_in_location",
                               {"location": location.title(),
                                "time": current_time})
         else:
@@ -306,8 +315,36 @@ class TimeSkill(NeonSkill):
             # An error should have been spoken by now, location wasn't valid
             return
         self.show_date_gui(requested_date)
-        speak = requested_date.strftime("%A, %B %-d, %Y")
-        self.speak_dialog("date", {"date": speak})
+        date = nice_date(requested_date)
+        if location:
+            self.speak_dialog("date_time_in_location",
+                              {"location": location.title(),
+                               "time": date})
+        else:
+            self.speak_dialog("date", {"date": date})
+
+    @intent_file_handler("what.dow.is.it.intent")
+    def handle_query_dow(self, message):
+        """
+        Handle a user request for the day of the week
+        :param message: Message associated with the request
+        """
+        if not request_for_neon(message):
+            return
+        location = message.data.get("location") or \
+            self._extract_location(message.data.get("utterance"))
+        requested_date = self.get_local_datetime(location, message)
+        if not requested_date:
+            # An error should have been spoken by now, location wasn't valid
+            return
+        self.show_date_gui(requested_date)
+        day = self.translate(day_to_dialog[requested_date.weekday()])
+        if location:
+            self.speak_dialog("date_time_in_location",
+                              {"location": location.title(),
+                               "time": day})
+        else:
+            self.speak_dialog("date", {"date": day})
 
     def get_timezone(self, locale: Union[str, dict]) \
             -> Optional[tzinfo]:
