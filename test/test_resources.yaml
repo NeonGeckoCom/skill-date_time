@@ -27,5 +27,6 @@ intents:
   padatious:
     - what.time.is.it.intent
     - what.day.is.it.intent
+    - what.dow.is.it.intent
   # Adapt intents are the name passed to the constructor
   adapt: []

@@ -1,4 +1,4 @@
 do you (know|have) the date( (at|in|for) {location}|)
 (what is|tell me|i want to know|i need to know) the date( (at|in|for) {location}|)
-what day is it( (at|in|for) {location}|)
-what is the (day|date)( (at|in|for) {location}|)
+what day is it( (at|in|for) {location}|)( today|)
+what is the (day|date)( (at|in|for) {location}|)( today|)

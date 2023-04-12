@@ -16,7 +16,7 @@ en-us:
       - location: paris
   what.dow.is.it.intent:
     - what day of the week is it
-    - what is the day or the week
+    - what is the day of the week
     - tell me what day of the week it is in australia:
         - location: australia
     - what day of the week is it in london:
