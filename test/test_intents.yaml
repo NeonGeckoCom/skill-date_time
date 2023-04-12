@@ -14,6 +14,13 @@ en-us:
     - what is the day today
     - tell me the date in paris:
       - location: paris
+  what.dow.is.it.intent:
+    - what day of the week is it
+    - what is the day of the week
+    - tell me what day of the week it is in australia:
+        - location: australia
+    - what day of the week is it in london:
+        - location: london
 unmatched intents:
   en-us:
     - what is time
@@ -21,3 +28,5 @@ unmatched intents:
     - what time is my next alarm
     - what is a date
     - translate what time is it to ukrainian
+    - what day of the week is thanksgiving on
+    - tell me the day of the week for easter

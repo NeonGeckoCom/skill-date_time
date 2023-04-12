@@ -253,32 +253,35 @@ class TestSkill(unittest.TestCase):
 
     def test_handle_query_time(self):
         default_location_message = Message("test_message",
-                                           {"Query": "what",
-                                            "Time": "time",
-                                            "utterance": "what time is it"})
+                                           {"utterance": "what time is it"})
         self.skill.handle_query_time(default_location_message)
         self.skill.speak_dialog.assert_called_once()
         call_args = self.skill.speak_dialog.call_args[0]
         self.assertEqual(call_args[0], "time.current")
         self.assertEqual(set(call_args[1].keys()), {"time"})
 
-        spec_location_message = Message("test_message",
-                                        {"Query": "what",
-                                         "Time": "time",
-                                         "location": "london",
-                                         "utterance": "what time is it in london"})
+        spec_location_message = Message(
+            "test_message", {"location": "london",
+                             "utterance": "what time is it in london"})
         self.skill.handle_query_time(spec_location_message)
         call_args = self.skill.speak_dialog.call_args[0]
-        self.assertEqual(call_args[0], "TimeInLocation")
+        self.assertEqual(call_args[0], "date_time_in_location")
         self.assertEqual(call_args[1]["location"], "London")
         self.assertEqual(set(call_args[1].keys()), {"location", "time"})
 
     def test_handle_query_date(self):
         default_location_message = Message("test_message",
-                                           {"Query": "what",
-                                            "Date": "date",
-                                            "utterance": "what is the date"})
+                                           {"utterance": "what is the date"})
         self.skill.handle_query_date(default_location_message)
+        self.skill.speak_dialog.assert_called_once()
+        call_args = self.skill.speak_dialog.call_args[0]
+        self.assertEqual(call_args[0], "date")
+        self.assertEqual(set(call_args[1].keys()), {"date"})
+
+    def test_handle_query_dow(self):
+        default_location_message = Message(
+            "test_message", {"utterance": "what is the day of the week"})
+        self.skill.handle_query_dow(default_location_message)
         self.skill.speak_dialog.assert_called_once()
         call_args = self.skill.speak_dialog.call_args[0]
         self.assertEqual(call_args[0], "date")
@@ -304,7 +307,8 @@ class TestSkill(unittest.TestCase):
             "paris texas": timezone("America/Chicago")
         }
         for case in str_test_cases:
-            self.assertEqual(self.skill.get_timezone(case), str_test_cases[case])
+            self.assertEqual(self.skill.get_timezone(case),
+                             str_test_cases[case])
 
     def test_get_local_datetime(self):
         # Test datetime, no location
@@ -435,14 +439,6 @@ class TestSkill(unittest.TestCase):
         self.assertEqual(self.skill.gui['year_string'], "2023")
         self.skill.gui.show_page.assert_called_with("date2.qml")
         self.skill.gui.show_page = real_gui
-
-    def test_extract_location(self):
-        location_seattle = "what time is it in seattle"
-        location_london = "what time is it in London England"
-        self.assertEqual(self.skill._extract_location(location_seattle),
-                         "seattle")
-        self.assertEqual(self.skill._extract_location(location_london),
-                         "London England")
 
     def test_get_timezone_from_neon_utils(self):
         self.assertEqual(self.skill._get_timezone_from_neon_utils("seattle"),
