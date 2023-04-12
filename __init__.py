@@ -280,8 +280,7 @@ class TimeSkill(NeonSkill):
         """
         if not request_for_neon(message):
             return
-        location = message.data.get("location") or \
-            self._extract_location(message.data.get("utterance"))
+        location = message.data.get("location")
         LOG.info(f"requested location: {location}")
         current_time = self.get_spoken_time(location, message)
 
@@ -307,8 +306,7 @@ class TimeSkill(NeonSkill):
         """
         if not request_for_neon(message):
             return
-        location = message.data.get("location") or \
-            self._extract_location(message.data.get("utterance"))
+        location = message.data.get("location")
         LOG.info(f"requested location: {location}")
         requested_date = self.get_local_datetime(location, message)
         if not requested_date:
@@ -331,8 +329,7 @@ class TimeSkill(NeonSkill):
         """
         if not request_for_neon(message):
             return
-        location = message.data.get("location") or \
-            self._extract_location(message.data.get("utterance"))
+        location = message.data.get("location")
         requested_date = self.get_local_datetime(location, message)
         if not requested_date:
             # An error should have been spoken by now, location wasn't valid
@@ -382,10 +379,6 @@ class TimeSkill(NeonSkill):
         :param message: Message associated with the request
         :returns: current datetime object or None if tz not found
         """
-        location = location or \
-            (self._extract_location(message.data.get("utterance")) if message
-             and message.data.get("utterance") else None)
-
         if location:  # Lookup the tz for the requested location
             # Filter out invalid characters from location names
             location = re.sub('[?!./_-]', ' ', location)
@@ -475,35 +468,6 @@ class TimeSkill(NeonSkill):
 
     def stop(self):
         pass
-
-    def _extract_location(self, utt: str) -> Optional[str]:
-        """
-        Patch the regex bug and try extracting a location from the utterance
-        :param utt: string utterance
-        :return: extracted location string if found in utterance
-        """
-        if not utt:
-            LOG.error("Requested location extraction from null utterance!")
-            return None
-        rx_file = self.find_resource('location.rx', 'regex')
-        if not rx_file:
-            LOG.error(f"Missing location.rx file!")
-            return None
-        if rx_file and utt:
-            with open(rx_file) as f:
-                for pat in f.read().splitlines():
-                    pat = pat.strip()
-                    if pat and pat[0] == "#":
-                        continue
-                    res = re.search(pat, utt)
-                    if res:
-                        try:
-                            to_return = res.group("Location")
-                            LOG.warning("Location extracted in patch method")
-                            return to_return
-                        except IndexError:
-                            pass
-        return None
 
     @staticmethod
     def _get_timezone_from_neon_utils(locale: Union[dict, str]) -> \

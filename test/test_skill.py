@@ -440,14 +440,6 @@ class TestSkill(unittest.TestCase):
         self.skill.gui.show_page.assert_called_with("date2.qml")
         self.skill.gui.show_page = real_gui
 
-    def test_extract_location(self):
-        location_seattle = "what time is it in seattle"
-        location_london = "what time is it in London England"
-        self.assertEqual(self.skill._extract_location(location_seattle),
-                         "seattle")
-        self.assertEqual(self.skill._extract_location(location_london),
-                         "London England")
-
     def test_get_timezone_from_neon_utils(self):
         self.assertEqual(self.skill._get_timezone_from_neon_utils("seattle"),
                          timezone("America/Los_Angeles"))
