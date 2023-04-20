@@ -444,6 +444,7 @@ class TestSkill(unittest.TestCase):
         self.assertEqual(self.skill._get_timezone_from_neon_utils("seattle"),
                          timezone("America/Los_Angeles"))
 
+    @pytest.mark.xfail()  # Nominatim Occasionally Times Out here
     def test_get_timezone_from_builtins(self):
         self.assertEqual(self.skill._get_timezone_from_builtins("seattle"),
                          timezone("America/Los_Angeles"))
