@@ -12,7 +12,14 @@ dialog:
   - date
   - time.current
   - time.tz.not.found
-  - TimeInLocation
+  - date_time_in_location
+  - word_monday
+  - word_tuesday
+  - word_wednesday
+  - word_thursday
+  - word_friday
+  - word_saturday
+  - word_sunday
 # regex entities, not necessarily filenames
 regex: []
 intents:
@@ -20,5 +27,6 @@ intents:
   padatious:
     - what.time.is.it.intent
     - what.day.is.it.intent
+    - what.dow.is.it.intent
   # Adapt intents are the name passed to the constructor
   adapt: []
