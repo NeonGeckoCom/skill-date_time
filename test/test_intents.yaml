@@ -10,6 +10,8 @@ en-us:
       - location: paris
     - what time is it in kyiv:
       - location: kyiv
+    - what time is it in amsterdam:
+        - location: amsterdam
   what.day.is.it.intent:
     - what is the day today
     - tell me the date in paris:

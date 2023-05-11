@@ -177,7 +177,8 @@ class TimeSkill(NeonSkill):
             if not dt:
                 return None
             load_language(self.lang)
-            LOG.debug(f"Got time: {dt.isoformat()} | use_24h={self.use_24hour}")
+            # Logging here produces logs every 10s
+            # LOG.debug(f"Got time: {dt.isoformat()}|use_24h={self.use_24hour}")
             use_ampm = True if location else \
                 self.preference_skill().get('use_ampm', False)
             # noinspection PyTypeChecker
