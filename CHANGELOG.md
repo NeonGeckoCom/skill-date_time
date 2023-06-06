@@ -1,22 +1,12 @@
 # Changelog
 
-## [0.2.2a2](https://github.com/NeonGeckoCom/skill-date_time/tree/0.2.2a2) (2023-04-20)
+## [0.3.1a1](https://github.com/NeonGeckoCom/skill-date_time/tree/0.3.1a1) (2023-05-11)
 
-[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/0.2.1...0.2.2a2)
-
-**Implemented enhancements:**
-
-- \[FEAT\] "day of the week" intent [\#50](https://github.com/NeonGeckoCom/skill-date_time/issues/50)
-
-**Fixed bugs:**
-
-- \[BUG\] Homescreen Time Format Settings [\#51](https://github.com/NeonGeckoCom/skill-date_time/issues/51)
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/0.3.0...0.3.1a1)
 
 **Merged pull requests:**
 
-- Handle relative paths in setup.py [\#55](https://github.com/NeonGeckoCom/skill-date_time/pull/55) ([NeonDaniel](https://github.com/NeonDaniel))
-- Update GH Automation [\#54](https://github.com/NeonGeckoCom/skill-date_time/pull/54) ([NeonDaniel](https://github.com/NeonDaniel))
-- Add "day of week" intent with updated tests and docs [\#52](https://github.com/NeonGeckoCom/skill-date_time/pull/52) ([NeonDaniel](https://github.com/NeonDaniel))
+- Troubleshooting Padacioso Intent Match failures [\#57](https://github.com/NeonGeckoCom/skill-date_time/pull/57) ([NeonDaniel](https://github.com/NeonDaniel))
 
 
 
