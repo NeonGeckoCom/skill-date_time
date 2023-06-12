@@ -50,7 +50,7 @@ from typing import Union, Optional
 from lingua_franca import load_language
 from lingua_franca.format import nice_time, date_time_format, nice_date
 from timezonefinder import TimezoneFinder
-from mycroft_bus_client import Message
+from ovos_bus_client import Message
 from ovos_utils.parse import fuzzy_match
 from ovos_utils import classproperty
 from ovos_utils.log import LOG
