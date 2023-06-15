@@ -92,9 +92,8 @@ def speakable_timezone(tz: str) -> str:
 
 
 class TimeSkill(NeonSkill):
-
-    def __init__(self):
-        super(TimeSkill, self).__init__("TimeSkill")
+    def __init__(self, **kwargs):
+        NeonSkill.__init__(self, **kwargs)
 
     @classproperty
     def runtime_requirements(self):
@@ -180,7 +179,7 @@ class TimeSkill(NeonSkill):
             # Logging here produces logs every 10s
             # LOG.debug(f"Got time: {dt.isoformat()}|use_24h={self.use_24hour}")
             use_ampm = True if location else \
-                self.preference_skill().get('use_ampm', False)
+                self.settings.get('use_ampm', False)
             # noinspection PyTypeChecker
             return nice_time(dt, self.lang, speech=False,
                              use_24hour=self.use_24hour,
@@ -580,7 +579,3 @@ class TimeSkill(NeonSkill):
                 return pytz.timezone(best[1])
         else:
             return None
-
-
-def create_skill():
-    return TimeSkill()
