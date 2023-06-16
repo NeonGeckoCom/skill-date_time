@@ -420,7 +420,7 @@ class TimeSkill(NeonSkill):
         dt = self.get_local_datetime(location, message)
         if not dt:
             return
-        use_ampm = self.preference_skill(message).get('use_ampm', False)
+        use_ampm = self.settings.get('use_ampm', False)
         if location:
             use_ampm = True
         load_language(self.lang)
