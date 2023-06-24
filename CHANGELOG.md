@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.3.2a4](https://github.com/NeonGeckoCom/skill-date_time/tree/0.3.2a4) (2023-06-23)
+
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/0.3.2a3...0.3.2a4)
+
+**Merged pull requests:**
+
+- Update dependencies to newer versions [\#62](https://github.com/NeonGeckoCom/skill-date_time/pull/62) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [0.3.2a3](https://github.com/NeonGeckoCom/skill-date_time/tree/0.3.2a3) (2023-06-16)
+
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/0.3.2a2...0.3.2a3)
+
+**Merged pull requests:**
+
+- Remove deprecated settings reference [\#61](https://github.com/NeonGeckoCom/skill-date_time/pull/61) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [0.3.2a2](https://github.com/NeonGeckoCom/skill-date_time/tree/0.3.2a2) (2023-06-15)
+
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/0.3.2a1...0.3.2a2)
+
+**Merged pull requests:**
+
+- Update skill to resolve warnings [\#60](https://github.com/NeonGeckoCom/skill-date_time/pull/60) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [0.3.2a1](https://github.com/NeonGeckoCom/skill-date_time/tree/0.3.2a1) (2023-06-12)
+
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/0.3.1a1...0.3.2a1)
+
+**Merged pull requests:**
+
+- Refactor mycroft-messagebus-client to ovos-bus-client [\#59](https://github.com/NeonGeckoCom/skill-date_time/pull/59) ([NeonDaniel](https://github.com/NeonDaniel))
+
 ## [0.3.1a1](https://github.com/NeonGeckoCom/skill-date_time/tree/0.3.1a1) (2023-05-11)
 
 [Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/0.3.0...0.3.1a1)
