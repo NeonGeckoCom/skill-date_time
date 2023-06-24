@@ -10,6 +10,8 @@ en-us:
       - location: paris
     - what time is it in kyiv:
       - location: kyiv
+    - what time is it in amsterdam:
+        - location: amsterdam
   what.day.is.it.intent:
     - what is the day today
     - tell me the date in paris:
@@ -29,4 +31,5 @@ unmatched intents:
     - what is a date
     - translate what time is it to ukrainian
     - what day of the week is thanksgiving on
-    - tell me the day of the week for easter
+#    - tell me the day of the week for easter
+# TODO: Re-implement with Padacioso adjustments

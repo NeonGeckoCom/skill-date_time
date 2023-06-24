@@ -50,7 +50,7 @@ from typing import Union, Optional
 from lingua_franca import load_language
 from lingua_franca.format import nice_time, date_time_format, nice_date
 from timezonefinder import TimezoneFinder
-from mycroft_bus_client import Message
+from ovos_bus_client import Message
 from ovos_utils.parse import fuzzy_match
 from ovos_utils import classproperty
 from ovos_utils.log import LOG
@@ -92,9 +92,8 @@ def speakable_timezone(tz: str) -> str:
 
 
 class TimeSkill(NeonSkill):
-
-    def __init__(self):
-        super(TimeSkill, self).__init__("TimeSkill")
+    def __init__(self, **kwargs):
+        NeonSkill.__init__(self, **kwargs)
 
     @classproperty
     def runtime_requirements(self):
@@ -177,9 +176,10 @@ class TimeSkill(NeonSkill):
             if not dt:
                 return None
             load_language(self.lang)
-            LOG.debug(f"Got time: {dt.isoformat()} | use_24h={self.use_24hour}")
+            # Logging here produces logs every 10s
+            # LOG.debug(f"Got time: {dt.isoformat()}|use_24h={self.use_24hour}")
             use_ampm = True if location else \
-                self.preference_skill().get('use_ampm', False)
+                self.settings.get('use_ampm', False)
             # noinspection PyTypeChecker
             return nice_time(dt, self.lang, speech=False,
                              use_24hour=self.use_24hour,
@@ -420,7 +420,7 @@ class TimeSkill(NeonSkill):
         dt = self.get_local_datetime(location, message)
         if not dt:
             return
-        use_ampm = self.preference_skill(message).get('use_ampm', False)
+        use_ampm = self.settings.get('use_ampm', False)
         if location:
             use_ampm = True
         load_language(self.lang)
@@ -579,7 +579,3 @@ class TimeSkill(NeonSkill):
                 return pytz.timezone(best[1])
         else:
             return None
-
-
-def create_skill():
-    return TimeSkill()

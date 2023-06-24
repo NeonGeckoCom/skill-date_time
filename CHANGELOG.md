@@ -1,22 +1,44 @@
 # Changelog
 
-## [0.2.2a2](https://github.com/NeonGeckoCom/skill-date_time/tree/0.2.2a2) (2023-04-20)
+## [0.3.2a4](https://github.com/NeonGeckoCom/skill-date_time/tree/0.3.2a4) (2023-06-23)
 
-[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/0.2.1...0.2.2a2)
-
-**Implemented enhancements:**
-
-- \[FEAT\] "day of the week" intent [\#50](https://github.com/NeonGeckoCom/skill-date_time/issues/50)
-
-**Fixed bugs:**
-
-- \[BUG\] Homescreen Time Format Settings [\#51](https://github.com/NeonGeckoCom/skill-date_time/issues/51)
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/0.3.2a3...0.3.2a4)
 
 **Merged pull requests:**
 
-- Handle relative paths in setup.py [\#55](https://github.com/NeonGeckoCom/skill-date_time/pull/55) ([NeonDaniel](https://github.com/NeonDaniel))
-- Update GH Automation [\#54](https://github.com/NeonGeckoCom/skill-date_time/pull/54) ([NeonDaniel](https://github.com/NeonDaniel))
-- Add "day of week" intent with updated tests and docs [\#52](https://github.com/NeonGeckoCom/skill-date_time/pull/52) ([NeonDaniel](https://github.com/NeonDaniel))
+- Update dependencies to newer versions [\#62](https://github.com/NeonGeckoCom/skill-date_time/pull/62) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [0.3.2a3](https://github.com/NeonGeckoCom/skill-date_time/tree/0.3.2a3) (2023-06-16)
+
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/0.3.2a2...0.3.2a3)
+
+**Merged pull requests:**
+
+- Remove deprecated settings reference [\#61](https://github.com/NeonGeckoCom/skill-date_time/pull/61) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [0.3.2a2](https://github.com/NeonGeckoCom/skill-date_time/tree/0.3.2a2) (2023-06-15)
+
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/0.3.2a1...0.3.2a2)
+
+**Merged pull requests:**
+
+- Update skill to resolve warnings [\#60](https://github.com/NeonGeckoCom/skill-date_time/pull/60) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [0.3.2a1](https://github.com/NeonGeckoCom/skill-date_time/tree/0.3.2a1) (2023-06-12)
+
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/0.3.1a1...0.3.2a1)
+
+**Merged pull requests:**
+
+- Refactor mycroft-messagebus-client to ovos-bus-client [\#59](https://github.com/NeonGeckoCom/skill-date_time/pull/59) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [0.3.1a1](https://github.com/NeonGeckoCom/skill-date_time/tree/0.3.1a1) (2023-05-11)
+
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/0.3.0...0.3.1a1)
+
+**Merged pull requests:**
+
+- Troubleshooting Padacioso Intent Match failures [\#57](https://github.com/NeonGeckoCom/skill-date_time/pull/57) ([NeonDaniel](https://github.com/NeonDaniel))
 
 
 
