@@ -1,1 +1,5 @@
-У {{location}} зараз {{time}}.
+Зараз у {{location}} {{time}}.
+В {{location}} на годиннику {{time}}.
+Час у {{location}} - {{time}}.
+{{time}} зараз у {{location}}.
+У {{location}} настала година {{time}}.
