@@ -1,0 +1,18 @@
+uk-ua:
+  what.time.is.it.intent:
+    - what time is it
+    - what is the time
+    - do you have the time
+    - can you tell me the time
+    - котра година
+    - точний місцевий час
+    - поточний час
+    - сказати поточний час
+    - котра година Києв:
+      - location: Києв
+    - точний місцевий час Запоріжжя:
+      - location: Запоріжжя
+    - поточний час Одеса:
+      - location: Одеса
+    - сказати поточний час Миколаїв:
+        - location: Миколаїв
