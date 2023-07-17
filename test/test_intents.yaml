@@ -23,10 +23,10 @@ en-us:
         - location: australia
     - what day of the week is it in london:
         - location: london
-uk-ua:
+uk-uk:
   what.time.is.it.intent:
-    - котра година
     - точний місцевий час
+    - котра година
     - поточний час
     - сказати поточний час
     - котра година Києв:
