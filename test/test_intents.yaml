@@ -23,18 +23,18 @@ en-us:
         - location: australia
     - what day of the week is it in london:
         - location: london
-uk-uk:
+uk-ua:
   what.time.is.it.intent:
-    - котра година
     - точний місцевий час
+    - котра година
     - поточний час
     - сказати поточний час
-    - котра година Києв:
-      - location: Києв
+    - котра година Київ:
+      - location: Київ
     - точний місцевий час Запоріжжя:
       - location: Запоріжжя
-    - поточний час Одеса:
-      - location: Одеса
+    - поточний час одеса:
+      - location: одеса
     - сказати поточний час Миколаїв:
         - location: Миколаїв
 unmatched intents:
