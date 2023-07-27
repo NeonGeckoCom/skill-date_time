@@ -23,7 +23,7 @@ en-us:
         - location: australia
     - what day of the week is it in london:
         - location: london
-uk-uk:
+uk-ua:
   what.time.is.it.intent:
     - точний місцевий час
     - котра година
