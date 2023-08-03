@@ -12,7 +12,7 @@ uk-ua:
       - location: одеса
     - сказати поточний час Миколаїв:
         - location: Миколаїв
- what.day.is.it.intent:
+  what.day.is.it.intent:
     - ти знаєш дату у Запоріжжі:
       - location: Запоріжжі
     - потрібна дата у Києві на сьогодні:
