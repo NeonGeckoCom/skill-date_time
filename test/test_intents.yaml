@@ -40,6 +40,8 @@ uk-ua:
   what.day.is.it.intent:
     - ти знаєш дату у запоріжжі:
       - location: запоріжжі
+    -скажи мені, будь ласка, який зараз день у Київ:
+      - location: Київ
     - потрібна дата у Київ на сьогодні:
       - location: Київ
   what.dow.is.it.intent:
