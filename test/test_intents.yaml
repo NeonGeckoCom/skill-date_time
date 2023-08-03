@@ -1,3 +1,28 @@
+en-us:
+  what.time.is.it.intent:
+    - what time is it
+    - what is the time
+    - do you have the time
+    - can you tell me the time
+    - what time is it in sydney australia:
+      - location: sydney australia
+    - tell me the time in paris:
+      - location: paris
+    - what time is it in kyiv:
+      - location: kyiv
+    - what time is it in amsterdam:
+        - location: amsterdam
+  what.day.is.it.intent:
+    - what is the day today
+    - tell me the date in paris:
+      - location: paris
+  what.dow.is.it.intent:
+    - what day of the week is it
+    - what is the day of the week
+    - tell me what day of the week it is in australia:
+        - location: australia
+    - what day of the week is it in london:
+        - location: london
 uk-ua:
   what.time.is.it.intent:
     - точний місцевий час
@@ -13,8 +38,8 @@ uk-ua:
     - сказати поточний час Миколаїв:
         - location: Миколаїв
   what.day.is.it.intent:
-    - ти знаєш дату у Запоріжжя:
-      - location: Запоріжжя
+    - ти знаєш дату у Запоріжжі:
+      - location: Запоріжжі
     - потрібна дата у Київ на сьогодні:
       - location: Київ
   what.dow.is.it.intent:
