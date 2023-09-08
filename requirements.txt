@@ -4,3 +4,4 @@ timezonefinder~=5.2
 ovos-bus-client~=0.0.4
 ovos-utils~=0.0.34
 neon-utils~=1.3
+ovos-lingua-franca>=0.4.8a3

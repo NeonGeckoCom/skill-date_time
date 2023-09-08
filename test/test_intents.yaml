@@ -23,13 +23,33 @@ en-us:
         - location: australia
     - what day of the week is it in london:
         - location: london
-unmatched intents:
-  en-us:
-    - what is time
-    - what time is the movie
-    - what time is my next alarm
-    - what is a date
-    - translate what time is it to ukrainian
-    - what day of the week is thanksgiving on
-#    - tell me the day of the week for easter
-# TODO: Re-implement with Padacioso adjustments
+uk-ua:
+  what.time.is.it.intent:
+    - точний місцевий час
+    - котра година
+    - поточний час
+    - сказати поточний час
+    - котра година Київ:
+      - location: Київ
+    - точний місцевий час Запоріжжя:
+      - location: Запоріжжя
+    - поточний час одеса:
+      - location: одеса
+    - сказати поточний час Миколаїв:
+        - location: Миколаїв
+  what.day.is.it.intent:
+    - ти знаєш дату у запоріжжя:
+      - location: запоріжжя
+    - скажи мені, будь ласка, який зараз день у київ:
+      - location: київ
+    - потрібна дата у київ на сьогодні:
+      - location: київ
+  what.dow.is.it.intent:
+    - який день тижня у одеса:
+      - location: одеса
+    - скажи мені, будь ласка, який день тижня у дніпро:
+      - location: дніпро
+    - потрібно знати, який день тижня у київ:
+        - location: київ
+    - я хочу знати день тижня у київ:
+        - location: київ
