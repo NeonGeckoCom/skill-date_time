@@ -59,9 +59,8 @@ from neon_utils.location_utils import get_coordinates, get_timezone
 from neon_utils.skills.neon_skill import NeonSkill
 from neon_utils.message_utils import dig_for_message, request_for_neon
 from neon_utils.user_utils import get_user_prefs
-
-from mycroft.skills.core import intent_file_handler, resting_screen_handler,\
-    skill_api_method
+from ovos_workshop.decorators import intent_file_handler, skill_api_method, \
+    resting_screen_handler
 
 
 day_to_dialog = {
@@ -73,6 +72,7 @@ day_to_dialog = {
     5: "word_saturday",
     6: "word_sunday"
 }
+
 
 def speakable_timezone(tz: str) -> str:
     """Convert timezone to a better speakable version

@@ -32,8 +32,6 @@ import unittest
 import pytest
 import datetime as dt
 
-
-from neon_utils.skills.neon_skill import LOG
 from os import mkdir
 from os.path import dirname, join, exists
 from pytz import timezone
@@ -46,7 +44,7 @@ class TestSkill(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        from mycroft.skills.skill_loader import SkillLoader
+        from ovos_workshop.skill_launcher import SkillLoader
 
         bus = FakeBus()
         bus.run_in_thread()
