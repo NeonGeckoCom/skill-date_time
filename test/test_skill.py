@@ -27,49 +27,15 @@
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import datetime
-import shutil
-import unittest
 import pytest
 import datetime as dt
 
-
-from neon_utils.skills.neon_skill import LOG
-from os import mkdir
-from os.path import dirname, join, exists
 from pytz import timezone
 from mock import Mock
 from ovos_bus_client import Message
-from ovos_utils.messagebus import FakeBus
+from neon_minerva.tests.skill_unit_test_base import SkillTestCase
 
-
-class TestSkill(unittest.TestCase):
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        from mycroft.skills.skill_loader import SkillLoader
-
-        bus = FakeBus()
-        bus.run_in_thread()
-        skill_loader = SkillLoader(bus, dirname(dirname(__file__)))
-        skill_loader.load()
-        cls.skill = skill_loader.instance
-        cls.test_fs = join(dirname(__file__), "skill_fs")
-        if not exists(cls.test_fs):
-            mkdir(cls.test_fs)
-        cls.skill.settings_write_path = cls.test_fs
-        cls.skill.file_system.path = cls.test_fs
-
-        # Override speak and speak_dialog to test passed arguments
-        cls.skill.speak = Mock()
-        cls.skill.speak_dialog = Mock()
-
-    @classmethod
-    def tearDownClass(cls) -> None:
-        shutil.rmtree(cls.test_fs)
-
-    def tearDown(self) -> None:
-        self.skill.speak.reset_mock()
-        self.skill.speak_dialog.reset_mock()
+class TestSkillMethods(SkillTestCase):
 
     def test_00_skill_init(self):
         # Test any parameters expected to be set in init or initialize methods
