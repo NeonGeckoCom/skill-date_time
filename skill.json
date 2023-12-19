@@ -16,7 +16,7 @@
     "requirements": {
         "python": [
             "geocoder~=1.38",
-            "neon-utils[network]@git+https://github.com/neongeckocom/neon-utils@FIX_FakeBusCompat",
+            "neon-utils~=1.8,>=1.8.1",
             "ovos-bus-client~=0.0.4",
             "ovos-lingua-franca~=0.4,>=0.4.8a3",
             "ovos-utils~=0.0.34",
