@@ -125,7 +125,7 @@ class TimeSkill(NeonSkill):
         self.gui['month_string'] = self.get_month_date()
         self.gui['year_string'] = self.get_year()
         # self.gui['build_date'] = None
-        self.gui.show_page('idle.qml')
+        self.gui.show_page('idle')
 
     @skill_api_method
     def get_display_date(self, day: Optional[datetime] = None,
@@ -453,7 +453,7 @@ class TimeSkill(NeonSkill):
         self.gui['minutes'] = minutes
         self.gui['ampm'] = ampm
         self.gui['date_string'] = display_date
-        self.gui.show_page('time.qml')
+        self.gui.show_page('time')
 
     def show_date_gui(self, date: datetime):
         """
@@ -464,7 +464,7 @@ class TimeSkill(NeonSkill):
         self.gui['weekday_string'] = date.strftime("%A")
         self.gui['monthday_string'] = date.strftime("%B %-d")
         self.gui['year_string'] = date.strftime("%Y")
-        self.gui.show_page('date2.qml')
+        self.gui.show_page('date2')
 
     def stop(self):
         pass
