@@ -59,7 +59,7 @@ from neon_utils.location_utils import get_coordinates, get_timezone
 from neon_utils.skills.neon_skill import NeonSkill
 from neon_utils.message_utils import dig_for_message, request_for_neon
 from neon_utils.user_utils import get_user_prefs
-from ovos_workshop.decorators import intent_file_handler, skill_api_method, \
+from ovos_workshop.decorators import intent_handler, skill_api_method, \
     resting_screen_handler
 
 
@@ -272,7 +272,7 @@ class TimeSkill(NeonSkill):
         """
         return (year % 400 == 0) or ((year % 4 == 0) and (year % 100 != 0))
 
-    @intent_file_handler("what.time.is.it.intent")
+    @intent_handler("what.time.is.it.intent")
     def handle_query_time(self, message: Message):
         """
         Handle a user request for the time
@@ -298,7 +298,7 @@ class TimeSkill(NeonSkill):
         else:
             self.speak_dialog("time.current", {"time": current_time})
 
-    @intent_file_handler("what.day.is.it.intent")
+    @intent_handler("what.day.is.it.intent")
     def handle_query_date(self, message: Message):
         """
         Handle a user request for the date
@@ -321,7 +321,7 @@ class TimeSkill(NeonSkill):
         else:
             self.speak_dialog("date", {"date": date})
 
-    @intent_file_handler("what.dow.is.it.intent")
+    @intent_handler("what.dow.is.it.intent")
     def handle_query_dow(self, message):
         """
         Handle a user request for the day of the week
