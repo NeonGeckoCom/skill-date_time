@@ -71,7 +71,7 @@ class TestSkillMethods(SkillTestCase):
         self.assertIsInstance(mock_gui["month_string"], str)
         self.assertIsInstance(mock_gui["year_string"], str)
         self.skill.gui.show_page.assert_called_once()
-        self.skill.gui.show_page.assert_called_with("idle.qml")
+        self.skill.gui.show_page.assert_called_with("idle")
 
         self.skill.gui = real_gui
 
@@ -371,7 +371,7 @@ class TestSkillMethods(SkillTestCase):
         self.assertEqual(self.skill.gui['minutes'], "30")
         self.assertEqual(self.skill.gui['ampm'], "PM")
         self.assertEqual(self.skill.gui['date_string'], "Date")
-        self.skill.gui.show_page.assert_called_with("time.qml")
+        self.skill.gui.show_page.assert_called_with("time")
 
         # Default location, no AM/PM
         self.skill.show_time_gui(None, "12:30", "Date")
@@ -380,7 +380,7 @@ class TestSkillMethods(SkillTestCase):
         self.assertEqual(self.skill.gui['minutes'], "30")
         self.assertEqual(self.skill.gui['ampm'], "")
         self.assertEqual(self.skill.gui['date_string'], "Date")
-        self.skill.gui.show_page.assert_called_with("time.qml")
+        self.skill.gui.show_page.assert_called_with("time")
 
         # With location
         self.skill.show_time_gui("seattle", "12:30", "Date")
@@ -389,7 +389,7 @@ class TestSkillMethods(SkillTestCase):
         self.assertEqual(self.skill.gui['minutes'], "30")
         self.assertEqual(self.skill.gui['ampm'], "")
         self.assertEqual(self.skill.gui['date_string'], "Date")
-        self.skill.gui.show_page.assert_called_with("time.qml")
+        self.skill.gui.show_page.assert_called_with("time")
 
         self.skill.gui.show_page = real_gui
 
@@ -403,7 +403,7 @@ class TestSkillMethods(SkillTestCase):
         self.assertEqual(self.skill.gui['monthday_string'],
                          date.strftime("%B %-d"))
         self.assertEqual(self.skill.gui['year_string'], "2023")
-        self.skill.gui.show_page.assert_called_with("date2.qml")
+        self.skill.gui.show_page.assert_called_with("date2")
         self.skill.gui.show_page = real_gui
 
     def test_get_timezone_from_neon_utils(self):
