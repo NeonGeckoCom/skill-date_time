@@ -35,6 +35,7 @@ from mock import Mock
 from ovos_bus_client import Message
 from neon_minerva.tests.skill_unit_test_base import SkillTestCase
 
+
 class TestSkillMethods(SkillTestCase):
 
     def test_00_skill_init(self):
