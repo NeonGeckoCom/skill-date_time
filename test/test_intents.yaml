@@ -53,3 +53,13 @@ uk-ua:
         - location: київ
     - я хочу знати день тижня у київ:
         - location: київ
+unmatched intents:
+  en-us:
+    - what is time
+    - what time is the movie
+    - what time is my next alarm
+    - what is a date
+    - translate what time is it to ukrainian
+    - what day of the week is thanksgiving on
+#    - tell me the day of the week for easter
+# TODO: Re-implement with Padacioso adjustments
