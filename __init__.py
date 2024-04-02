@@ -59,9 +59,8 @@ from neon_utils.location_utils import get_coordinates, get_timezone
 from neon_utils.skills.neon_skill import NeonSkill
 from neon_utils.message_utils import dig_for_message, request_for_neon
 from neon_utils.user_utils import get_user_prefs
-
-from mycroft.skills.core import intent_file_handler, resting_screen_handler,\
-    skill_api_method
+from ovos_workshop.decorators import intent_handler, skill_api_method, \
+    resting_screen_handler
 
 
 day_to_dialog = {
@@ -73,6 +72,7 @@ day_to_dialog = {
     5: "word_saturday",
     6: "word_sunday"
 }
+
 
 def speakable_timezone(tz: str) -> str:
     """Convert timezone to a better speakable version
@@ -125,7 +125,7 @@ class TimeSkill(NeonSkill):
         self.gui['month_string'] = self.get_month_date()
         self.gui['year_string'] = self.get_year()
         # self.gui['build_date'] = None
-        self.gui.show_page('idle.qml')
+        self.gui.show_page('idle')
 
     @skill_api_method
     def get_display_date(self, day: Optional[datetime] = None,
@@ -272,7 +272,7 @@ class TimeSkill(NeonSkill):
         """
         return (year % 400 == 0) or ((year % 4 == 0) and (year % 100 != 0))
 
-    @intent_file_handler("what.time.is.it.intent")
+    @intent_handler("what.time.is.it.intent")
     def handle_query_time(self, message: Message):
         """
         Handle a user request for the time
@@ -298,7 +298,7 @@ class TimeSkill(NeonSkill):
         else:
             self.speak_dialog("time.current", {"time": current_time})
 
-    @intent_file_handler("what.day.is.it.intent")
+    @intent_handler("what.day.is.it.intent")
     def handle_query_date(self, message: Message):
         """
         Handle a user request for the date
@@ -321,7 +321,7 @@ class TimeSkill(NeonSkill):
         else:
             self.speak_dialog("date", {"date": date})
 
-    @intent_file_handler("what.dow.is.it.intent")
+    @intent_handler("what.dow.is.it.intent")
     def handle_query_dow(self, message):
         """
         Handle a user request for the day of the week
@@ -453,7 +453,7 @@ class TimeSkill(NeonSkill):
         self.gui['minutes'] = minutes
         self.gui['ampm'] = ampm
         self.gui['date_string'] = display_date
-        self.gui.show_page('time.qml')
+        self.gui.show_page('time')
 
     def show_date_gui(self, date: datetime):
         """
@@ -464,7 +464,7 @@ class TimeSkill(NeonSkill):
         self.gui['weekday_string'] = date.strftime("%A")
         self.gui['monthday_string'] = date.strftime("%B %-d")
         self.gui['year_string'] = date.strftime("%Y")
-        self.gui.show_page('date2.qml')
+        self.gui.show_page('date2')
 
     def stop(self):
         pass

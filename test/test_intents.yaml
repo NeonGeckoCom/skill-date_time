@@ -23,6 +23,36 @@ en-us:
         - location: australia
     - what day of the week is it in london:
         - location: london
+uk-ua:
+  what.time.is.it.intent:
+    - точний місцевий час
+    - котра година
+    - поточний час
+    - сказати поточний час
+    - котра година Київ:
+      - location: київ
+    - точний місцевий час Запоріжжя:
+      - location: запоріжжя
+    - поточний час одеса:
+      - location: одеса
+    - сказати поточний час Миколаїв:
+        - location: миколаїв
+  what.day.is.it.intent:
+    - ти знаєш дату у запоріжжя:
+      - location: запоріжжя
+    - скажи мені, будь ласка, який зараз день у київ:
+      - location: київ
+    - потрібна дата у київ на сьогодні:
+      - location: київ
+  what.dow.is.it.intent:
+    - який день тижня у одеса:
+      - location: одеса
+    - скажи мені, будь ласка, який день тижня у дніпро:
+      - location: дніпро
+    - потрібно знати, який день тижня у київ:
+        - location: київ
+    - я хочу знати день тижня у київ:
+        - location: київ
 unmatched intents:
   en-us:
     - what is time
