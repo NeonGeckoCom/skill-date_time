@@ -1,5 +1,5 @@
 Зараз у {{location}} {{time}}.
-В {{location}} на годиннику {{time}}.
-Час у {{location}} - {{time}}.
+У {{location}} наразі  {{time}}.
+День у {{location}} - {{time}}.
 {{time}} зараз у {{location}}.
-У {{location}} настала година {{time}}.
+У {{location}} сьогодні  {{time}}.
