@@ -3,6 +3,7 @@ geocoder~=1.38
 timezonefinder~=5.2
 ovos-bus-client~=0.0,>=0.0.4
 ovos-utils~=0.0, >=0.0.34
-neon-utils~=1.8,>=1.11.1a2
+#neon-utils~=1.8,>=1.11.1a2
+neon-utils@git+https://github.com/neongeckocom/neon-utils@PATCH_SkillSettingsBackwardsCompat
 ovos-workshop~=0.0,>=0.0.12
 ovos-lingua-franca~=0.4
