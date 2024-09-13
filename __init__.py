@@ -479,6 +479,8 @@ class TimeSkill(NeonSkill):
         """
         if not locale:
             raise ValueError("Locale not specified")
+        if isinstance(locale, str):
+            locale = {"address": locale}
         coords = get_coordinates(locale)
         if coords == (-1, -1):
             return None
