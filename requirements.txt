@@ -1,8 +1,8 @@
 pytz>=2022.1
 geocoder~=1.38
 timezonefinder~=5.2
-ovos-bus-client~=0.0.4
+ovos-bus-client~=0.0,>=0.0.4
 ovos-utils~=0.0, >=0.0.34
-neon-utils~=1.8,>=1.8.1
+neon-utils~=1.8,>=1.11.1a2
 ovos-workshop~=0.0,>=0.0.12
 ovos-lingua-franca~=0.4
