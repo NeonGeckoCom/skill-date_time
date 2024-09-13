@@ -479,6 +479,11 @@ class TimeSkill(NeonSkill):
         """
         if not locale:
             raise ValueError("Locale not specified")
+        if isinstance(locale, str):
+            # `get_coordinates` expects a dict location, but it will join it to
+            # a string before making the API call, so `locale` can be any
+            # location search string
+            locale = {"city": locale}
         coords = get_coordinates(locale)
         if coords == (-1, -1):
             return None
