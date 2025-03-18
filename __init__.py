@@ -1,6 +1,6 @@
 # NEON AI (TM) SOFTWARE, Software Development Kit & Application Framework
 # All trademark and other rights reserved by their respective owners
-# Copyright 2008-2022 Neongecko.com Inc.
+# Copyright 2008-2025 Neongecko.com Inc.
 # Contributors: Daniel McKnight, Guy Daniels, Elon Gasper, Richard Leeds,
 # Regina Bloomstine, Casimiro Ferreira, Andrii Pernatii, Kirill Hrymailo
 # BSD-3 License
@@ -479,6 +479,11 @@ class TimeSkill(NeonSkill):
         """
         if not locale:
             raise ValueError("Locale not specified")
+        if isinstance(locale, str):
+            # `get_coordinates` expects a dict location, but it will join it to
+            # a string before making the API call, so `locale` can be any
+            # location search string
+            locale = {"city": locale}
         coords = get_coordinates(locale)
         if coords == (-1, -1):
             return None

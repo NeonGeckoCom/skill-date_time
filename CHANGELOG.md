@@ -1,68 +1,32 @@
 # Changelog
 
-## [1.0.1a8](https://github.com/NeonGeckoCom/skill-date_time/tree/1.0.1a8) (2024-04-01)
+## [1.1.1a3](https://github.com/NeonGeckoCom/skill-date_time/tree/1.1.1a3) (2025-03-11)
 
-[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.0.1a7...1.0.1a8)
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.1.1a2...1.1.1a3)
 
-**Merged pull requests:**
+**Fixed bugs:**
 
-- Replace accidentally removed test cases [\#74](https://github.com/NeonGeckoCom/skill-date_time/pull/74) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [1.0.1a7](https://github.com/NeonGeckoCom/skill-date_time/tree/1.0.1a7) (2024-04-01)
-
-[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.0.1a6...1.0.1a7)
+- Timezone Errors in Unit Tests [\#12](https://github.com/NeonGeckoCom/skill-date_time/issues/12)
 
 **Merged pull requests:**
 
-- Update dependencies [\#73](https://github.com/NeonGeckoCom/skill-date_time/pull/73) ([NeonDaniel](https://github.com/NeonDaniel))
+- Update automation, gitignore, and license notices [\#78](https://github.com/NeonGeckoCom/skill-date_time/pull/78) ([NeonDaniel](https://github.com/NeonDaniel))
 
-## [1.0.1a6](https://github.com/NeonGeckoCom/skill-date_time/tree/1.0.1a6) (2024-02-01)
+## [1.1.1a2](https://github.com/NeonGeckoCom/skill-date_time/tree/1.1.1a2) (2024-09-13)
 
-[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.0.1a5...1.0.1a6)
-
-**Merged pull requests:**
-
-- Support ovos-utils 0.1 [\#72](https://github.com/NeonGeckoCom/skill-date_time/pull/72) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [1.0.1a5](https://github.com/NeonGeckoCom/skill-date_time/tree/1.0.1a5) (2024-01-16)
-
-[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.0.1a4...1.0.1a5)
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.1.1a1...1.1.1a2)
 
 **Merged pull requests:**
 
-- Validate shared intent tests using Minerva test case [\#71](https://github.com/NeonGeckoCom/skill-date_time/pull/71) ([NeonDaniel](https://github.com/NeonDaniel))
+- Update OVOS dependencies to allow 0.x versions [\#77](https://github.com/NeonGeckoCom/skill-date_time/pull/77) ([NeonDaniel](https://github.com/NeonDaniel))
 
-## [1.0.1a4](https://github.com/NeonGeckoCom/skill-date_time/tree/1.0.1a4) (2024-01-03)
+## [1.1.1a1](https://github.com/NeonGeckoCom/skill-date_time/tree/1.1.1a1) (2024-04-22)
 
-[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.0.1a3...1.0.1a4)
-
-**Merged pull requests:**
-
-- Resolve deprecation warnings [\#70](https://github.com/NeonGeckoCom/skill-date_time/pull/70) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [1.0.1a3](https://github.com/NeonGeckoCom/skill-date_time/tree/1.0.1a3) (2023-12-19)
-
-[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.0.1a2...1.0.1a3)
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.1.0...1.1.1a1)
 
 **Merged pull requests:**
 
-- Update dependency versions and tests [\#68](https://github.com/NeonGeckoCom/skill-date_time/pull/68) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [1.0.1a2](https://github.com/NeonGeckoCom/skill-date_time/tree/1.0.1a2) (2023-09-08)
-
-[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.0.1a1...1.0.1a2)
-
-**Merged pull requests:**
-
-- Ukraininan Translation [\#26](https://github.com/NeonGeckoCom/skill-date_time/pull/26) ([NeonMariia](https://github.com/NeonMariia))
-
-## [1.0.1a1](https://github.com/NeonGeckoCom/skill-date_time/tree/1.0.1a1) (2023-08-15)
-
-[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.0.0...1.0.1a1)
-
-**Merged pull requests:**
-
-- refined italian translation [\#66](https://github.com/NeonGeckoCom/skill-date_time/pull/66) ([denics](https://github.com/denics))
+- Update Ukrainian resources [\#76](https://github.com/NeonGeckoCom/skill-date_time/pull/76) ([NeonDmitry](https://github.com/NeonDmitry))
 
 
 
