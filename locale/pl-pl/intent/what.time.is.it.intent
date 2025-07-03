@@ -1,0 +1,8 @@
+która godzina
+która jest godzina
+jaka jest godzina
+która godzina jest (w|na) {location}
+jaka jest godzina (w|na) {location}
+(czy wiesz|masz) która jest godzina( (w|na) {location}|)
+(jaka jest|(możesz |powiedz mi |)powiedz|chcę wiedzieć|muszę wiedzieć) (aktualna |)godzina( (w|na) {location}|)
+podaj (aktualną |)godzinę( (w|na) {location}|)
