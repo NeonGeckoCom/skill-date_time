@@ -50,9 +50,35 @@ uk-ua:
     - скажи мені, будь ласка, який день тижня у дніпро:
       - location: дніпро
     - потрібно знати, який день тижня у київ:
-        - location: київ
+      - location: київ
     - я хочу знати день тижня у київ:
-        - location: київ
+      - location: київ
+pl-pl:
+  what.time.is.it.intent:
+    - która godzina
+    - jaka jest godzina
+    - która jest godzina
+    - która godzina jest w warszawie:
+      - location: warszawie
+    - jaka jest godzina w krakowie:
+      - location: krakowie
+    - powiedz mi, która jest godzina w gdańsku:
+      - location: gdańsku
+    - która godzina jest teraz w poznaniu:
+      - location: poznaniu
+  what.day.is.it.intent:
+    - jaki dzisiaj jest dzień
+    - jaka jest data
+    - jaki jest dzień w warszawie:
+      - location: warszawie
+    - powiedz mi, jaka jest data w krakowie:
+      - location: krakowie
+  what.dow.is.it.intent:
+    - jaki dzisiaj jest dzień tygodnia
+    - jaki jest dzień tygodnia w łodzi:
+      - location: łodzi
+    - powiedz mi, jaki dzisiaj jest dzień tygodnia w poznaniu:
+      - location: poznaniu
 unmatched intents:
   en-us:
     - what is time
