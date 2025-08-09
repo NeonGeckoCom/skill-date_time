@@ -150,8 +150,8 @@ class TimeSkill(NeonSkill):
                     from pydantic import BaseModel
                     parameters = signature.parameters
 
-                    for name, param in parameters.items():
-                        if name == 'self':
+                    for arg_name, param in parameters.items():
+                        if arg_name == 'self':
                             continue
                         if issubclass(param.annotation, BaseModel):
                             # Get the JSON schema for the BaseModel
