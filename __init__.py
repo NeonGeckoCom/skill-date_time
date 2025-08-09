@@ -107,6 +107,63 @@ class TimeSkill(NeonSkill):
                                    no_network_fallback=True,
                                    no_gui_fallback=True)
 
+    # TODO: Added here for testing; move to ovos-workshop
+    def _register_public_api(self):
+        """
+        Find and register API methods decorated with `@api_method` and create a
+        messagebus handler for fetching the api info if any handlers exist.
+        """
+
+        def wrap_method(fn):
+            """Boilerplate for returning the response to the sender."""
+
+            def wrapper(message):
+                result = fn(*message.data['args'], **message.data['kwargs'])
+                message.context["skill_id"] = self.skill_id
+                self.bus.emit(message.response(data={'result': result}))
+
+            return wrapper
+        from ovos_utils.skills import get_non_properties
+        methods = [attr_name for attr_name in get_non_properties(self)
+                   if hasattr(getattr(self, attr_name), '__name__')]
+
+        for attr_name in methods:
+            method = getattr(self, attr_name)
+
+            if hasattr(method, 'api_method'):
+                doc = method.__doc__ or ''
+                name = method.__name__
+
+            # Extract method signature and return type
+            import inspect
+            signature = str(inspect.signature(method))
+            return_type = inspect.signature(method).return_annotation
+            if return_type is inspect.Signature.empty:
+                return_type = "None"
+
+
+                self.public_api[name] = {
+                    'help': doc,
+                    'type': f'{self.skill_id}.{name}',
+                    'func': method,
+                    'signature': signature
+                }
+        for key in self.public_api:
+            if ('type' in self.public_api[key] and
+                    'func' in self.public_api[key]):
+                self.log.debug(f"Adding api method: "
+                               f"{self.public_api[key]['type']}")
+
+                # remove the function member since it shouldn't be
+                # reused and can't be sent over the messagebus
+                func = self.public_api[key].pop('func')
+                self.add_event(self.public_api[key]['type'],
+                               wrap_method(func), speak_errors=False)
+
+        if self.public_api:
+            self.add_event(f'{self.skill_id}.public_api',
+                           self._send_public_api, speak_errors=False)
+
     @property
     def use_24hour(self) -> bool:
         return get_user_prefs()["units"]["time"] == 24
