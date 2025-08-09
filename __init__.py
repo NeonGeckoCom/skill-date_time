@@ -146,7 +146,8 @@ class TimeSkill(NeonSkill):
                     fields[name] = (annotation, default)
                 
                 # Dynamically create the Pydantic model
-                model = create_model(method.__name__.capitalize() + "Model", **fields)
+                model = create_model(method.__name__.capitalize() + "Model", **fields,
+                                     __config__=type("Config", (), {'arbitrary_types_allowed': True}))
 
                 self.public_api[name] = {
                     'help': doc,
