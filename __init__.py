@@ -108,6 +108,7 @@ class TimeSkill(NeonSkill):
                                    no_gui_fallback=True)
 
     # TODO: Added here for testing; move to ovos-workshop
+    @staticmethod
     def signature_to_json_schema(signature):
         """
         Convert a Python function signature to a JSON schema.
