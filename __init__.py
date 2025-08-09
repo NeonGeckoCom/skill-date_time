@@ -136,17 +136,23 @@ class TimeSkill(NeonSkill):
 
                 # Extract method signature and return type
                 import inspect
-                signature = str(inspect.signature(method))
-                return_type = inspect.signature(method).return_annotation
-                if return_type is inspect.Signature.empty:
-                    return_type = "None"
-
+                from typing import Any
+                from pydantic import create_model
+                signature = inspect.signature(method)
+                fields = {}
+                for name, param in signature.parameters.items():
+                    annotation = param.annotation if param.annotation != inspect.Parameter.empty else Any
+                    default = param.default if param.default != inspect.Parameter.empty else ...
+                    fields[name] = (annotation, default)
+                
+                # Dynamically create the Pydantic model
+                model = create_model(method.__name__.capitalize() + "Model", **fields)
 
                 self.public_api[name] = {
                     'help': doc,
                     'type': f'{self.skill_id}.{name}',
                     'func': method,
-                    'signature': signature
+                    'signature': model.schema_json()
                 }
         for key in self.public_api:
             if ('type' in self.public_api[key] and
