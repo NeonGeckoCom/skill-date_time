@@ -142,6 +142,26 @@ class TimeSkill(NeonSkill):
             if param.default == inspect.Parameter.empty:
                 schema["required"].append(param_name)
 
+            # Process return type
+            if signature.return_annotation != inspect.Signature.empty:
+                return_schema = {"type": "string"}  # Default type
+                annotation = signature.return_annotation
+
+                if annotation is int:
+                    return_schema["type"] = "integer"
+                elif annotation is float:
+                    return_schema["type"] = "number"
+                elif annotation is bool:
+                    return_schema["type"] = "boolean"
+                elif annotation is dict:
+                    return_schema["type"] = "object"
+                elif annotation is list:
+                    return_schema["type"] = "array"
+                elif annotation is str:
+                    return_schema["type"] = "string"
+
+                schema["return"] = return_schema
+
             schema["properties"][param_name] = param_schema
 
         return schema
