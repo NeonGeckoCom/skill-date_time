@@ -46,6 +46,7 @@ import pytz
 
 from datetime import tzinfo, datetime
 from typing import Union, Optional
+from pydantic import BaseModel
 
 from lingua_franca import load_language
 from lingua_franca.format import nice_time, date_time_format, nice_date
@@ -72,6 +73,12 @@ day_to_dialog = {
     5: "word_saturday",
     6: "word_sunday"
 }
+
+class _CurrentTimeRequest(BaseModel):
+    location: Optional[str] = None
+
+class _CurrentTimeResponse(BaseModel):
+    current_timestamp: float
 
 
 def speakable_timezone(tz: str) -> str:
@@ -200,6 +207,20 @@ class TimeSkill(NeonSkill):
         self.gui['year_string'] = self.get_year()
         # self.gui['build_date'] = None
         self.gui.show_page('idle')
+
+    @skill_api_method
+    def get_current_time(self, request: _CurrentTimeRequest) -> \
+            _CurrentTimeResponse:
+        """
+        Get the current timestamp in seconds since epoch.
+        :param request: Request containing location to get time of
+        :returns: Response containing current timestamp
+        """
+        location = request.location or self.location['city']['name']
+        dt = self.get_local_datetime(location, None)
+        if not dt:
+            raise ValueError(f"Invalid location: {location}")
+        return _CurrentTimeResponse(current_timestamp=dt.timestamp())
 
     @skill_api_method
     def get_display_date(self, day: Optional[datetime] = None,
