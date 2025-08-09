@@ -134,12 +134,12 @@ class TimeSkill(NeonSkill):
                 doc = method.__doc__ or ''
                 name = method.__name__
 
-            # Extract method signature and return type
-            import inspect
-            signature = str(inspect.signature(method))
-            return_type = inspect.signature(method).return_annotation
-            if return_type is inspect.Signature.empty:
-                return_type = "None"
+                # Extract method signature and return type
+                import inspect
+                signature = str(inspect.signature(method))
+                return_type = inspect.signature(method).return_annotation
+                if return_type is inspect.Signature.empty:
+                    return_type = "None"
 
 
                 self.public_api[name] = {
