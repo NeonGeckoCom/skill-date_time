@@ -108,6 +108,43 @@ class TimeSkill(NeonSkill):
                                    no_gui_fallback=True)
 
     # TODO: Added here for testing; move to ovos-workshop
+    def signature_to_json_schema(signature):
+        """
+        Convert a Python function signature to a JSON schema.
+        :param signature: inspect.Signature object
+        :return: JSON schema as a dictionary
+        """
+        schema = {
+            "type": "object",
+            "properties": {},
+            "required": []
+        }
+        import inspect
+        for param_name, param in signature.parameters.items():
+            param_schema = {"type": "string"}  # Default type
+            if param.annotation != inspect.Parameter.empty:
+                if param.annotation is int:
+                    param_schema["type"] = "integer"
+                elif param.annotation is float:
+                    param_schema["type"] = "number"
+                elif param.annotation is bool:
+                    param_schema["type"] = "boolean"
+                elif param.annotation is dict:
+                    param_schema["type"] = "object"
+                elif param.annotation is list:
+                    param_schema["type"] = "array"
+                elif param.annotation is str:
+                    param_schema["type"] = "string"
+                else:
+                    param_schema["type"] = "object"
+
+            if param.default == inspect.Parameter.empty:
+                schema["required"].append(param_name)
+
+            schema["properties"][param_name] = param_schema
+
+        return schema
+
     def _register_public_api(self):
         """
         Find and register API methods decorated with `@api_method` and create a
@@ -136,24 +173,13 @@ class TimeSkill(NeonSkill):
 
                 # Extract method signature and return type
                 import inspect
-                from typing import Any
-                from pydantic import create_model
                 signature = inspect.signature(method)
-                fields = {}
-                for name, param in signature.parameters.items():
-                    annotation = param.annotation if param.annotation != inspect.Parameter.empty else Any
-                    default = param.default if param.default != inspect.Parameter.empty else ...
-                    fields[name] = (annotation, default)
-                
-                # Dynamically create the Pydantic model
-                model = create_model(method.__name__.capitalize() + "Model", **fields,
-                                     __config__=type("Config", (), {'arbitrary_types_allowed': True}))
 
                 self.public_api[name] = {
                     'help': doc,
                     'type': f'{self.skill_id}.{name}',
                     'func': method,
-                    'signature': model.schema_json()
+                    'signature': self.signature_to_json_schema(signature)
                 }
         for key in self.public_api:
             if ('type' in self.public_api[key] and
