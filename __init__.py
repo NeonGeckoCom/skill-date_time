@@ -108,64 +108,6 @@ class TimeSkill(NeonSkill):
                                    no_gui_fallback=True)
 
     # TODO: Added here for testing; move to ovos-workshop
-    @staticmethod
-    def signature_to_json_schema(signature):
-        """
-        Convert a Python function signature to a JSON schema.
-        :param signature: inspect.Signature object
-        :return: JSON schema as a dictionary
-        """
-        schema = {
-            "type": "object",
-            "properties": {},
-            "required": []
-        }
-        import inspect
-        for param_name, param in signature.parameters.items():
-            param_schema = {"type": "string"}  # Default type
-            if param.annotation != inspect.Parameter.empty:
-                if param.annotation is int:
-                    param_schema["type"] = "integer"
-                elif param.annotation is float:
-                    param_schema["type"] = "number"
-                elif param.annotation is bool:
-                    param_schema["type"] = "boolean"
-                elif param.annotation is dict:
-                    param_schema["type"] = "object"
-                elif param.annotation is list:
-                    param_schema["type"] = "array"
-                elif param.annotation is str:
-                    param_schema["type"] = "string"
-                else:
-                    param_schema["type"] = "object"
-
-            if param.default == inspect.Parameter.empty:
-                schema["required"].append(param_name)
-
-            # Process return type
-            if signature.return_annotation != inspect.Signature.empty:
-                return_schema = {"type": "string"}  # Default type
-                annotation = signature.return_annotation
-
-                if annotation is int:
-                    return_schema["type"] = "integer"
-                elif annotation is float:
-                    return_schema["type"] = "number"
-                elif annotation is bool:
-                    return_schema["type"] = "boolean"
-                elif annotation is dict:
-                    return_schema["type"] = "object"
-                elif annotation is list:
-                    return_schema["type"] = "array"
-                elif annotation is str:
-                    return_schema["type"] = "string"
-
-                schema["return"] = return_schema
-
-            schema["properties"][param_name] = param_schema
-
-        return schema
-
     def _register_public_api(self):
         """
         Find and register API methods decorated with `@api_method` and create a
@@ -195,12 +137,33 @@ class TimeSkill(NeonSkill):
                 # Extract method signature and return type
                 import inspect
                 signature = inspect.signature(method)
+                schema = None
+                return_schema = None
+                try:
+                    from pydantic import BaseModel
+                    parameters = signature.parameters
+
+                    for name, param in parameters.items():
+                        if name == 'self':
+                            continue
+                        if issubclass(param.annotation, BaseModel):
+                            # Get the JSON schema for the BaseModel
+                            schema = param.annotation.schema_json()
+                            break
+                    if signature.return_annotation and issubclass(signature.return_annotation, BaseModel):
+                        # Get the JSON schema for the return type
+                        return_schema = signature.return_annotation.model_json_schema()
+                except ImportError:
+                    # If pydantic is not installed, there is no schema to extract
+                    pass
 
                 self.public_api[name] = {
                     'help': doc,
                     'type': f'{self.skill_id}.{name}',
                     'func': method,
-                    'signature': self.signature_to_json_schema(signature)
+                    'signature': str(signature),
+                    'request_schema': schema,
+                    'response_schema': return_schema
                 }
         for key in self.public_api:
             if ('type' in self.public_api[key] and
