@@ -155,7 +155,7 @@ class TimeSkill(NeonSkill):
                             continue
                         if issubclass(param.annotation, BaseModel):
                             # Get the JSON schema for the BaseModel
-                            schema = param.annotation.schema_json()
+                            schema = param.annotation.model_json_schema()
                             break
                     if signature.return_annotation and issubclass(signature.return_annotation, BaseModel):
                         # Get the JSON schema for the return type
