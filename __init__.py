@@ -41,6 +41,7 @@
 # limitations under the License.
 
 import re
+from time import time
 import geocoder
 import pytz
 
@@ -125,6 +126,7 @@ class TimeSkill(NeonSkill):
             """Boilerplate for returning the response to the sender."""
 
             def wrapper(message):
+                start_time = time()
                 if arg_model:
                     result = fn(arg_model(*message.data['args'], 
                                     **message.data['kwargs']))
@@ -137,7 +139,7 @@ class TimeSkill(NeonSkill):
                     result = fn(*message.data['args'], **message.data['kwargs'])
                 message.context["skill_id"] = self.skill_id
                 self.bus.emit(message.response(data={'result': result}))
-
+                LOG.info(f"API method completed in {time() - start_time}s")
             return wrapper
 
         from ovos_utils.skills import get_non_properties
@@ -230,11 +232,11 @@ class TimeSkill(NeonSkill):
         :param request: Request containing location to get time of
         :returns: Response containing current timestamp
         """
-        location = request.location or self.location['city']['name']
-        dt = self.get_local_datetime(location, None)
-        if not dt:
-            raise ValueError(f"Invalid location: {location}")
-        return _CurrentTimeResponse(current_timestamp=dt.timestamp())
+        #location = request.location or self.location['city']['name']
+        #dt = self.get_local_datetime(location, None)
+        #if not dt:
+        #    raise ValueError(f"Invalid location: {location}")
+        return _CurrentTimeResponse(current_timestamp=time())
 
     @skill_api_method
     def get_display_date(self, day: Optional[datetime] = None,
