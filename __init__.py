@@ -127,18 +127,25 @@ class TimeSkill(NeonSkill):
 
             def wrapper(message):
                 start_time = time()
-                if arg_model:
-                    result = fn(arg_model(*message.data['args'], 
-                                    **message.data['kwargs']))
-                    try:
-                        result = result.model_dump()
-                    except AttributeError:
-                        # Response is not a Pydantic model
-                        pass
-                else:
-                    result = fn(*message.data['args'], **message.data['kwargs'])
+                result = None
+                error = None
+                try:
+                    if arg_model:
+                        result = fn(arg_model(*message.data['args'], 
+                                              **message.data['kwargs']))
+                        try:
+                            result = result.model_dump()
+                        except AttributeError:
+                            # Response is not a Pydantic model
+                            pass
+                    else:
+                        result = fn(*message.data.get('args', []), 
+                                    **message.data.get('kwargs', {}))
+                except Exception as e:
+                    error = str(e)
                 message.context["skill_id"] = self.skill_id
-                self.bus.emit(message.response(data={'result': result}))
+                self.bus.emit(message.response(data={'result': result,
+                                                     'error': error}))
                 LOG.info(f"API method completed in {time() - start_time}s")
             return wrapper
 
@@ -232,10 +239,10 @@ class TimeSkill(NeonSkill):
         :param request: Request containing location to get time of
         :returns: Response containing current timestamp
         """
-        #location = request.location or self.location['city']['name']
-        #dt = self.get_local_datetime(location, None)
-        #if not dt:
-        #    raise ValueError(f"Invalid location: {location}")
+        location = request.location or self.location['city']['name']
+        dt = self.get_local_datetime(location, None)
+        if not dt:
+            raise ValueError(f"Invalid location: {location}")
         return _CurrentTimeResponse(current_timestamp=time())
 
     @skill_api_method
