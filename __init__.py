@@ -133,14 +133,14 @@ class TimeSkill(NeonSkill):
                     if arg_model:
                         result = fn(arg_model(*message.data['args'], 
                                               **message.data['kwargs']))
-                        try:
-                            result = result.model_dump()
-                        except AttributeError:
-                            # Response is not a Pydantic model
-                            pass
                     else:
                         result = fn(*message.data.get('args', []), 
                                     **message.data.get('kwargs', {}))
+                    try:
+                        result = result.model_dump()
+                    except AttributeError:
+                        # Response is not a Pydantic model
+                        pass
                 except Exception as e:
                     error = str(e)
                 message.context["skill_id"] = self.skill_id
