@@ -232,17 +232,12 @@ class TimeSkill(NeonSkill):
         self.gui.show_page('idle')
 
     @skill_api_method
-    def get_current_time(self, request: _CurrentTimeRequest) -> \
+    def get_current_time(self) -> \
             _CurrentTimeResponse:
         """
         Get the current timestamp in seconds since epoch.
-        :param request: Request containing location to get time of
         :returns: Response containing current timestamp
         """
-        location = request.location or self.location['city']['name']
-        dt = self.get_local_datetime(location, None)
-        if not dt:
-            raise ValueError(f"Invalid location: {location}")
         return _CurrentTimeResponse(current_timestamp=time())
 
     @skill_api_method
