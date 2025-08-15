@@ -81,6 +81,10 @@ class _CurrentTimeRequest(BaseModel):
 class _CurrentTimeResponse(BaseModel):
     current_timestamp: float
 
+class _FormattedTimeResponse(BaseModel):
+    formatted_time: str
+    formatted_date: str
+    current_weekday: str
 
 def speakable_timezone(tz: str) -> str:
     """Convert timezone to a better speakable version
@@ -239,6 +243,24 @@ class TimeSkill(NeonSkill):
         :returns: Response containing current timestamp
         """
         return _CurrentTimeResponse(current_timestamp=time())
+
+    @skill_api_method
+    def get_formatted_time(self, request: _CurrentTimeRequest) -> \
+            _FormattedTimeResponse:
+        """
+        Get the current time formatted as time, date, and weekday strings
+        """
+        location = request.location or self.location['city']['name']
+        dt = self.get_local_datetime(location)
+        if not dt:
+            raise ValueError(f"Invalid location: {location}")
+        formatted_time = dt.strftime("%H:%M")
+        formatted_date = dt.strftime("%Y-%m-%d")
+        current_weekday = dt.strftime("%A")
+        return _FormattedTimeResponse(formatted_time=formatted_time,
+                                      formatted_date=formatted_date,
+                                      current_weekday=current_weekday)
+
 
     @skill_api_method
     def get_display_date(self, day: Optional[datetime] = None,
