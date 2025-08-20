@@ -6,3 +6,4 @@ ovos-utils~=0.0, >=0.0.34
 neon-utils~=1.12
 ovos-workshop~=0.0,>=0.0.12
 ovos-lingua-franca~=0.4
+pydantic~=2.0

@@ -30,11 +30,16 @@ import datetime
 import pytest
 import datetime as dt
 
+from os import environ
 from pytz import timezone
-from mock import Mock
+
+from unittest.mock import Mock, patch
 from ovos_bus_client import Message
 from neon_minerva.tests.skill_unit_test_base import SkillTestCase
 
+from skill_date_time import TimeSkill
+
+environ['TEST_SKILL_ENTRYPOINT'] = 'skill-date_time.neongeckocom'
 
 class TestSkillMethods(SkillTestCase):
 
@@ -43,6 +48,7 @@ class TestSkillMethods(SkillTestCase):
         from neon_utils.skills import NeonSkill
 
         self.assertIsInstance(self.skill, NeonSkill)
+        self.assertIsInstance(self.skill, TimeSkill)
 
     def test_handle_idle(self):
         class MockGui:
@@ -173,32 +179,38 @@ class TestSkillMethods(SkillTestCase):
         known_day = dt.datetime(day=1, month=1, year=2000)
         self.assertEqual(self.skill.get_weekday(known_day), "Saturday")
 
-    def test_get_month_date(self):
+    @patch('skill_date_time.dig_for_message')
+    @patch.object(TimeSkill, 'get_local_datetime')
+    def test_get_month_date(self, get_local_datetime, dig_for_message):
         from neon_utils.user_utils import get_default_user_config
         config = get_default_user_config()
         config['user']['username'] = 'test_user'
         test_date = dt.datetime(month=1, day=1, year=2000)
+        get_local_datetime.return_value = test_date
 
+        # TODO: Refactor is removing `message` param
         config['units']['date'] = "MDY"
         test_message = Message("test", {}, {"username": "test_user",
                                             "user_profiles": [config]})
-        date_str = self.skill.get_month_date(test_date, message=test_message)
+        dig_for_message.return_value = test_message
+        date_str = self.skill.get_month_date()
         self.assertEqual(date_str, "January 01")
 
         config['units']['date'] = "DMY"
         test_message = Message("test", {}, {"username": "test_user",
                                             "user_profiles": [config]})
-        date_str = self.skill.get_month_date(test_date, message=test_message)
+        dig_for_message.return_value = test_message
+        date_str = self.skill.get_month_date()
         self.assertEqual(date_str, "01 January")
 
         config['units']['date'] = "YMD"
         test_message = Message("test", {}, {"username": "test_user",
                                             "user_profiles": [config]})
-        date_str = self.skill.get_month_date(test_date, message=test_message)
+        dig_for_message.return_value = test_message
+        date_str = self.skill.get_month_date()
         self.assertEqual(date_str, "January 01")
-
-        now_date_str = self.skill.get_month_date()
-        self.assertNotEqual(date_str, now_date_str)
+        
+        # TODO: Validate with non-mocked get_local_datetime and location input
 
     def test_get_year(self):
         self.assertIsInstance(self.skill.get_year(), str)
