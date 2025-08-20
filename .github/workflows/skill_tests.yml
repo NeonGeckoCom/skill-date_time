@@ -16,7 +16,6 @@ jobs:
       # TODO: Padacioso handling extra words with high-conf.
       test_padacioso: false
       test_padatious: true
-      ovos_versions: "[]"
       skill_entrypoint: "skill-date_time.neongeckocom"
   skill_resource_tests:
     uses: neongeckocom/.github/.github/workflows/skill_test_resources.yml@master
