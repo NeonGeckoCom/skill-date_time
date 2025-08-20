@@ -44,6 +44,7 @@ import re
 import geocoder
 import pytz
 
+from time import time
 from datetime import tzinfo, datetime
 from typing import Union, Optional
 
@@ -62,7 +63,9 @@ from neon_utils.user_utils import get_user_prefs
 from ovos_workshop.decorators import intent_handler, skill_api_method, \
     resting_screen_handler
 
-from skill_date_time.api_data_models import DisplayCurrentTimeResponse, DisplayDateReponse, MonthDateResponse, TimeInLocationRequest, WeekdayResponse, YearResponse
+from skill_date_time.api_data_models import DisplayCurrentTimeResponse, \
+        DisplayDateReponse, MonthDateResponse, TimeInLocationRequest, \
+        WeekdayResponse, YearResponse, CurrentTimeResponse, FormattedTimeResponse
 
 
 day_to_dialog = {
@@ -133,9 +136,7 @@ class TimeSkill(NeonSkill):
     def get_display_date(self,
                          request: TimeInLocationRequest = TimeInLocationRequest()) -> DisplayDateReponse:
         """
-        Get the full date for day or location in the configured format.
-        :param request: TimeInLocationRequest optionally including a location
-        :returns: The full date in the user configured format
+        Get the full date in the configured format.
         """
         # TODO: Refactor to accept format as a param?
         message = dig_for_message()
@@ -154,9 +155,7 @@ class TimeSkill(NeonSkill):
     def get_display_current_time(self, request: TimeInLocationRequest = TimeInLocationRequest(),
                                  ) -> DisplayCurrentTimeResponse:
         """
-        Get a formatted digital clock time based on the user preferences
-        :param request: TimeInLocationRequest optionally including a location
-        :returns: Formatted string time
+        Get a formatted digital clock time based on the user's preferences
         """
         message = dig_for_message()
         location = request.location
@@ -179,9 +178,7 @@ class TimeSkill(NeonSkill):
     def get_weekday(self, request: TimeInLocationRequest = TimeInLocationRequest(),
                     ) -> WeekdayResponse:
         """
-        Get the weekday name for a given day.
-        :param request: TimeInLocationRequest optionally including a location
-        :returns: The name of the weekday (i.e. Monday)
+        Get the weekday name for a given day. (Monday, Tuesday, etc.)
         """
         day = self.get_local_datetime(request.location, None)
         if self.lang in date_time_format.lang_config.keys():
@@ -196,10 +193,8 @@ class TimeSkill(NeonSkill):
     def get_month_date(self,
                        request: TimeInLocationRequest = TimeInLocationRequest()) -> MonthDateResponse:
         """
-        Get the month and date for a given day and location
-        :param request: TimeInLocationRequest optionally including a location
-        :returns: date in the format DD MONTH or MONTH DD
-            depending on the users date_format setting.
+        Get the month and date for a given day and location in the format 
+        DD MONTH or MONTH DD, depending on the user's date_format setting.
         """
         message = dig_for_message()
         unit_prefs = get_user_prefs(message)["units"]
@@ -220,12 +215,33 @@ class TimeSkill(NeonSkill):
     def get_year(self, 
                  request: TimeInLocationRequest = TimeInLocationRequest()) -> YearResponse:
         """
-        Get the year for a given day and location
-        :param request: TimeInLocationRequest optionally including a location
-        :returns: year in the format YYYY
+        Get the year for a given day and location in YYYY format
         """
         day = self.get_local_datetime(request.location)
         return day.strftime("%Y")
+
+    @skill_api_method
+    def get_current_time(self) -> CurrentTimeResponse:
+        """
+        Get the current epoch timestamp in seconds
+        """
+        return time()
+
+    @skill_api_method
+    def get_formatted_time(self, request: TimeInLocationRequest = TimeInLocationRequest()) -> FormattedTimeResponse:
+        """
+        Get the current time formatted as time, date, and weekday strings
+        """
+        location = request.location or self.location['city']['name']
+        dt = self.get_local_datetime(location)
+        if not dt:
+            raise ValueError(f"Invalid location: {location}")
+        formatted_time = dt.strftime("%H:%M")
+        formatted_date = dt.strftime("%Y-%m-%d")
+        current_weekday = dt.strftime("%A")
+        return FormattedTimeResponse(formatted_time=formatted_time,
+                                      formatted_date=formatted_date,
+                                      current_weekday=current_weekday)
 
     def get_next_leap_year(self, year: int) -> int:
         """

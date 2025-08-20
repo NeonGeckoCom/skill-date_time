@@ -54,3 +54,12 @@ class MonthDateResponse(RootModel):
 class YearResponse(RootModel):
     root: str = Field(description="Year (YYYY)")
 
+
+class CurrentTimeResponse(RootModel):
+    root: float = Field(description="Current epoch time in seconds")
+
+
+class FormattedTimeResponse(BaseModel):
+    formatted_time: str = Field(description="Current time in HH:MM format")
+    formatted_date: str = Field(description="Current date in YYYY-MM-DD format")
+    current_weekday: str = Field(description("Current weekday name in English"))
