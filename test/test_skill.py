@@ -37,8 +37,8 @@ from unittest.mock import Mock, patch
 from ovos_bus_client import Message
 from neon_minerva.tests.skill_unit_test_base import SkillTestCase
 
-from skill_date_time import TimeSkill
-from skill_date_time.api_data_models import TimeInLocationRequest
+from neon_skill_date_time import TimeSkill
+from neon_skill_date_time.api_data_models import TimeInLocationRequest
 
 environ['TEST_SKILL_ENTRYPOINT'] = 'skill-date_time.neongeckocom'
 
@@ -83,7 +83,7 @@ class TestSkillMethods(SkillTestCase):
 
         self.skill.gui = real_gui
 
-    @patch('skill_date_time.dig_for_message')
+    @patch('neon_skill_date_time.dig_for_message')
     @patch.object(TimeSkill, 'get_local_datetime')
     def test_get_display_date(self, get_time, dig_for_message):
         from neon_utils.user_utils import get_default_user_config
@@ -115,7 +115,7 @@ class TestSkillMethods(SkillTestCase):
         date_str = self.skill.get_display_date()
         self.assertEqual(date_str, "2000/1/2")
 
-    @patch('skill_date_time.dig_for_message')
+    @patch('neon_skill_date_time.dig_for_message')
     def test_get_display_current_time(self, dig_for_message):
         from neon_utils.user_utils import get_default_user_config
         config = get_default_user_config()
@@ -196,7 +196,7 @@ class TestSkillMethods(SkillTestCase):
         get_local_datetime.return_value = known_day
         self.assertEqual(self.skill.get_weekday(), "Saturday")
 
-    @patch('skill_date_time.dig_for_message')
+    @patch('neon_skill_date_time.dig_for_message')
     @patch.object(TimeSkill, 'get_local_datetime')
     def test_get_month_date(self, get_local_datetime, dig_for_message):
         from neon_utils.user_utils import get_default_user_config

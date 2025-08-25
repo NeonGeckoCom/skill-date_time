@@ -63,7 +63,7 @@ from neon_utils.user_utils import get_user_prefs
 from ovos_workshop.decorators import intent_handler, skill_api_method, \
     resting_screen_handler
 
-from skill_date_time.api_data_models import DisplayCurrentTimeResponse, \
+from neon_skill_date_time.api_data_models import DisplayCurrentTimeResponse, \
         DisplayDateReponse, MonthDateResponse, TimeInLocationRequest, \
         WeekdayResponse, YearResponse, CurrentTimeResponse, FormattedTimeResponse
 
