@@ -26,4 +26,40 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-__version__ = "2.0.0"
+from typing import Optional
+from pydantic import BaseModel, RootModel, Field
+
+
+class TimeInLocationRequest(BaseModel):
+    location: Optional[str] = Field(
+            default=None, description="Location to get time information for")
+
+
+class DisplayDateReponse(RootModel):
+    root: str = Field(description="Date in the user-configured format")
+
+
+class DisplayCurrentTimeResponse(RootModel):
+    root: str = Field(description="Current time in the user-configured format")
+
+
+class WeekdayResponse(RootModel):
+    root: str = Field(description="Weekday printed in the user's language")
+
+
+class MonthDateResponse(RootModel):
+    root: str = Field(description="Month and day in the user-configured format")
+
+
+class YearResponse(RootModel):
+    root: str = Field(description="Year (YYYY)")
+
+
+class CurrentTimeResponse(RootModel):
+    root: float = Field(description="Current epoch time in seconds")
+
+
+class FormattedTimeResponse(BaseModel):
+    formatted_time: str = Field(description="Current time in HH:MM format")
+    formatted_date: str = Field(description="Current date in YYYY-MM-DD format")
+    current_weekday: str = Field(description="Current weekday name in English")

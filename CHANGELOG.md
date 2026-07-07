@@ -1,32 +1,36 @@
 # Changelog
 
-## [1.1.1a3](https://github.com/NeonGeckoCom/skill-date_time/tree/1.1.1a3) (2025-03-11)
+## [1.1.2a4](https://github.com/NeonGeckoCom/skill-date_time/tree/1.1.2a4) (2026-07-07)
 
-[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.1.1a2...1.1.1a3)
-
-**Fixed bugs:**
-
-- Timezone Errors in Unit Tests [\#12](https://github.com/NeonGeckoCom/skill-date_time/issues/12)
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.1.2a3...1.1.2a4)
 
 **Merged pull requests:**
 
-- Update automation, gitignore, and license notices [\#78](https://github.com/NeonGeckoCom/skill-date_time/pull/78) ([NeonDaniel](https://github.com/NeonDaniel))
+- Update test dependency to stable spec [\#86](https://github.com/NeonGeckoCom/skill-date_time/pull/86) ([NeonDaniel](https://github.com/NeonDaniel))
 
-## [1.1.1a2](https://github.com/NeonGeckoCom/skill-date_time/tree/1.1.1a2) (2024-09-13)
+## [1.1.2a3](https://github.com/NeonGeckoCom/skill-date_time/tree/1.1.2a3) (2025-08-25)
 
-[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.1.1a1...1.1.1a2)
-
-**Merged pull requests:**
-
-- Update OVOS dependencies to allow 0.x versions [\#77](https://github.com/NeonGeckoCom/skill-date_time/pull/77) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [1.1.1a1](https://github.com/NeonGeckoCom/skill-date_time/tree/1.1.1a1) (2024-04-22)
-
-[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.1.0...1.1.1a1)
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.1.2a2...1.1.2a3)
 
 **Merged pull requests:**
 
-- Update Ukrainian resources [\#76](https://github.com/NeonGeckoCom/skill-date_time/pull/76) ([NeonDmitry](https://github.com/NeonDmitry))
+- Refactor package name for consistency with other skills and plugins [\#85](https://github.com/NeonGeckoCom/skill-date_time/pull/85) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.1.2a2](https://github.com/NeonGeckoCom/skill-date_time/tree/1.1.2a2) (2025-08-25)
+
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.1.2a1...1.1.2a2)
+
+**Merged pull requests:**
+
+- Refactor Skill API endpoints [\#84](https://github.com/NeonGeckoCom/skill-date_time/pull/84) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [1.1.2a1](https://github.com/NeonGeckoCom/skill-date_time/tree/1.1.2a1) (2025-08-20)
+
+[Full Changelog](https://github.com/NeonGeckoCom/skill-date_time/compare/1.1.1...1.1.2a1)
+
+**Merged pull requests:**
+
+- Refactor into a structure that supports editable installation [\#83](https://github.com/NeonGeckoCom/skill-date_time/pull/83) ([NeonDaniel](https://github.com/NeonDaniel))
 
 
 
